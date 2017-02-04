@@ -19,5 +19,6 @@ from django.contrib.gis import admin
 admin.autodiscover()
 
 urlpatterns = [
+    url(r'^world/', include('world.urls')),
     url(r'^admin/', admin.site.urls),
 ]
