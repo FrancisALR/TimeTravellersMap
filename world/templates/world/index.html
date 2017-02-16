@@ -20,6 +20,7 @@
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
     <script>
       function init() {
+      	
         map = new OpenLayers.Map("basicMap");
         map.addLayer(new OpenLayers.Layer.OSM());
 
@@ -42,6 +43,9 @@
   </head>
   <body onload="init();">
     <div id="basicMap"></div> 
+    {% for item in borders %}
+    	<p>{{item.name}}<p>
+    {% endfor %}	
  <H1> hey there, Devang is trying to work with openStreet Map here !! </h1>
   </body>
 </html>
