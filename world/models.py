@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models
+from django.core.serializers import serialize
 
 class WorldBorder(models.Model):
     # Regular Django fields corresponding to the attributes in the
