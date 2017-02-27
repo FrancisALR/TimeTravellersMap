@@ -11,6 +11,8 @@
     </style>
     <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
 
+
+
     <script type=text/javascript>
     function init() {
     // create a layer with the OSM source
@@ -46,6 +48,19 @@
         ]
       };
 
+      var PolygonLayer = new ol.layer.Vector({
+        title: 'Polygon',
+      	source: new ol.source.Vector({
+          projection:new ol.proj.get("EPSG:3857"),
+          url:'http://localhost:8080/poly/',
+          format: new ol.format.KML()
+      	}),
+
+        style: new ol.style.Style({
+          fill: new ol.style.Fill({color: 'green'}),
+          stroke: new ol.style.Stroke({color: 'blue', width: 2})
+        }),
+      });
 
         var vectorSource = new ol.source.Vector({
            features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
@@ -78,7 +93,7 @@
         // finally, the map with our custom interactions, controls and overlays
         var map = new ol.Map({
           target: 'map',
-          layers: [layer, vectorLayer],
+          layers: [layer, vectorLayer, PolygonLayer],
           interactions: [interaction],
           controls: [control],
           overlays: [overlay],

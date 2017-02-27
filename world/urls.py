@@ -1,5 +1,5 @@
 from django.conf.urls import url
-
+from .models import WorldBorder
 from . import views
 
 urlpatterns = [
