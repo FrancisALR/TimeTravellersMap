@@ -11,5 +11,7 @@ def index(request):
     })
 
 def shpPoly(request):
-  polygons = WorldBorder.objects.kml()
+  polygons = WorldBorder.objects.kml().filter(name='France')
+
+  #selected = polygons.objects.get(name="France")
   return render_to_kml("world/placemarks.kml", {'places': polygons})

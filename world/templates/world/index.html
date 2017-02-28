@@ -47,19 +47,40 @@
 
         ]
       };
+       var style = new ol.style.Style({
+        fill: new ol.style.Fill({
+          color: '#319FD3'
+        }),
+        stroke: new ol.style.Stroke({
+          color: '#319FD3',
+          width: 1
+        }),
+        text: new ol.style.Text({
+          font: '12px Calibri,sans-serif',
+          fill: new ol.style.Fill({
+            color: '#000'
+          }),
+          stroke: new ol.style.Stroke({
+            color: '#fff',
+            width: 3
+          })
+        })
+      });
 
       var PolygonLayer = new ol.layer.Vector({
         title: 'Polygon',
       	source: new ol.source.Vector({
           projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/poly/',
-          format: new ol.format.KML()
-      	}),
+          url:'http://localhost:8000/poly',
+          format: new ol.format.KML(),
 
-        style: new ol.style.Style({
-          fill: new ol.style.Fill({color: 'green'}),
-          stroke: new ol.style.Stroke({color: 'blue', width: 2})
-        }),
+      	}),
+      	style: function(feature, resolution) {
+          style.getText().setText(resolution < 5000 ? feature.get('name') : '');
+          return style;
+        }
+
+
       });
 
         var vectorSource = new ol.source.Vector({
@@ -87,13 +108,13 @@
         // view, starting at the center
         var view = new ol.View({
           center: center,
-          zoom: 2
+          zoom: 4
         });
 
         // finally, the map with our custom interactions, controls and overlays
         var map = new ol.Map({
           target: 'map',
-          layers: [layer, vectorLayer, PolygonLayer],
+          layers: [layer, PolygonLayer],
           interactions: [interaction],
           controls: [control],
           overlays: [overlay],
