@@ -22,5 +22,6 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^world/', include('world.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^poly/', shpPoly),
+    url(r'^originalEU/', originaleu),
+    url(r'^additionalEU', additionaleu),
 ]

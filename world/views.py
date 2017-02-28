@@ -10,8 +10,12 @@ def index(request):
     'borders' : WorldBorder.objects.all()
     })
 
-def shpPoly(request):
-  polygons = WorldBorder.objects.kml().filter(name='France')
 
-  #selected = polygons.objects.get(name="France")
+def originaleu(request):
+  polygons = WorldBorder.objects.kml().filter(name__in=['France','Belgium','Germany', 'Luxembourg', 'Italy', 'Netherlands'])
   return render_to_kml("world/placemarks.kml", {'places': polygons})
+
+
+def additionaleu(request):
+    polygons2 = WorldBorder.objects.kml().filter(name__in=['United Kingdom','Denmark','Ireland'])
+    return render_to_kml("world/placemarks.kml", {'places': polygons2})
