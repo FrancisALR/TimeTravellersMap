@@ -22,6 +22,12 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^world/', include('world.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^originalEU/', originaleu),
+    url(r'^originalEU', originaleu),
     url(r'^additionalEU', additionaleu),
+    url(r'^greecetoEU', greeceeu),
+    url(r'^1986eu', eu1986),
+    url(r'^1995eu', eu1995),
+    url(r'^2004eu', eu2004),
+    url(r'^2007eu', eu2007),
+    url(r'^2013eu', eu2013)
 ]

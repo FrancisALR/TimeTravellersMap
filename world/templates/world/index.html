@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
     <style>
       .map {
-        height: 800px;
+        height: 600px;
         width: 80%;
 
       }
@@ -30,7 +30,7 @@
 		  view: new ol.View({
 			projection: 'EPSG:3857',
 			center: ol.proj.transform([2.4, 48], 'EPSG:4326', 'EPSG:3857'),
-			zoom:6,
+			zoom:4,
 		  })
 	    });
 
@@ -42,11 +42,17 @@
 
       map.addLayer(stamen);
 
+
+
+
+
+      }
+      function original() {
       var OriginalEu = new ol.layer.Vector({
         title: 'Polygon',
       	source: new ol.source.Vector({
           projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8000/originalEU',
+          url:'http://localhost:8080/originalEU',
           format: new ol.format.KML({
           extractStyles:false
           })
@@ -62,10 +68,6 @@
 
 
         map.addLayer(OriginalEu);
-
-
-
-
       }
 
       function add() {
@@ -73,7 +75,7 @@
         title: 'Polygon',
       	source: new ol.source.Vector({
           projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8000/additionalEU',
+          url:'http://localhost:8080/additionalEU',
           format: new ol.format.KML({
           extractStyles:false
           })
@@ -90,6 +92,136 @@
 
       }
 
+      function add2() {
+        var AdditionEu = new ol.layer.Vector({
+        title: 'Polygon',
+      	source: new ol.source.Vector({
+          projection:new ol.proj.get("EPSG:3857"),
+          url:'http://localhost:8080/greecetoEU',
+          format: new ol.format.KML({
+          extractStyles:false
+          })
+          }),
+          style: [
+                            new ol.style.Style({
+                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
+                                fill: new ol.style.Fill({color: [255,0,255,0.5]})
+                            })
+                        ]
+      });
+
+        map.addLayer(AdditionEu)
+
+      }
+      function add1986() {
+        var AdditionEu = new ol.layer.Vector({
+        title: 'Polygon',
+      	source: new ol.source.Vector({
+          projection:new ol.proj.get("EPSG:3857"),
+          url:'http://localhost:8080/1986eu',
+          format: new ol.format.KML({
+          extractStyles:false
+          })
+          }),
+          style: [
+                            new ol.style.Style({
+                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
+                                fill: new ol.style.Fill({color: [128,0,0,0.5]})
+                            })
+                        ]
+      });
+
+        map.addLayer(AdditionEu)
+
+      }
+      function add1995() {
+        var AdditionEu = new ol.layer.Vector({
+        title: 'Polygon',
+      	source: new ol.source.Vector({
+          projection:new ol.proj.get("EPSG:3857"),
+          url:'http://localhost:8080/1995eu',
+          format: new ol.format.KML({
+          extractStyles:false
+          })
+          }),
+          style: [
+                            new ol.style.Style({
+                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
+                                fill: new ol.style.Fill({color: [0,128,128,0.5]})
+                            })
+                        ]
+      });
+
+        map.addLayer(AdditionEu)
+
+      }
+
+      function add2004() {
+        var AdditionEu = new ol.layer.Vector({
+        title: 'Polygon',
+      	source: new ol.source.Vector({
+          projection:new ol.proj.get("EPSG:3857"),
+          url:'http://localhost:8080/2004eu',
+          format: new ol.format.KML({
+          extractStyles:false
+          })
+          }),
+          style: [
+                            new ol.style.Style({
+                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
+                                fill: new ol.style.Fill({color: [255,255,0,0.5]})
+                            })
+                        ]
+      });
+
+        map.addLayer(AdditionEu)
+
+      }
+
+      function add2007() {
+        var AdditionEu = new ol.layer.Vector({
+        title: 'Polygon',
+      	source: new ol.source.Vector({
+          projection:new ol.proj.get("EPSG:3857"),
+          url:'http://localhost:8080/2007eu',
+          format: new ol.format.KML({
+          extractStyles:false
+          })
+          }),
+          style: [
+                            new ol.style.Style({
+                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
+                                fill: new ol.style.Fill({color: [128,128,128,0.5]})
+                            })
+                        ]
+      });
+
+        map.addLayer(AdditionEu)
+
+      }
+
+      function add2013() {
+        var AdditionEu = new ol.layer.Vector({
+        title: 'Polygon',
+      	source: new ol.source.Vector({
+          projection:new ol.proj.get("EPSG:3857"),
+          url:'http://localhost:8080/2013eu',
+          format: new ol.format.KML({
+          extractStyles:false
+          })
+          }),
+          style: [
+                            new ol.style.Style({
+                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
+                                fill: new ol.style.Fill({color: [0,0,128,0.5]})
+                            })
+                        ]
+      });
+
+        map.addLayer(AdditionEu)
+
+      }
+
 
 
     </script>
@@ -98,10 +230,18 @@
     <div id="map" class="map"></div>
 
     <div id="basicMap"></div>
-
-    <input type="button" value="Add Layer" onclick="add()">
-    {% for item in borders %}
-    	<p>{{item.name}}<p>
-    {% endfor %}
+    <input type="button" value="1951" onclick="original()">
+    <input type="button" value="1973" onclick="add()">
+    <input type="button" value="1981" onclick="add2()">
+    <input type="button" value="1986" onclick="add1986()">
+    <input type="button" value="1995" onclick="add1995()">
+    <input type="button" value="2004" onclick="add2004()">
+    <input type="button" value="2007" onclick="add2007()">
+    <input type="button" value="2013" onclick="add2013()">
+    <select name="item_id">
+    {% for entry in borders %}
+    <option value="{{ entry.id }}">{{ entry.name }}</option>
+  {% endfor %}
   </body>
+</select>
 </html>

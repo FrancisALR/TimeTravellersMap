@@ -17,5 +17,29 @@ def originaleu(request):
 
 
 def additionaleu(request):
-    polygons2 = WorldBorder.objects.kml().filter(name__in=['United Kingdom','Denmark','Ireland'])
+    polygons2 = WorldBorder.objects.kml().filter(name__in=['United Kingdom','Denmark','Ireland','Gibraltar'])
     return render_to_kml("world/placemarks.kml", {'places': polygons2})
+
+def greeceeu(request):
+    greecepolygon = WorldBorder.objects.kml().filter(name__in=['Greece'])
+    return render_to_kml("world/placemarks.kml", {'places' : greecepolygon})
+
+def eu1986(request):
+    eightysixpolygon = WorldBorder.objects.kml().filter(name__in=['Spain', 'Portugal'])
+    return render_to_kml("world/placemarks.kml", {'places' : eightysixpolygon})
+
+def eu1995(request):
+    ninetyfivepolygon = WorldBorder.objects.kml().filter(name__in=['Finland', 'Austria', 'Sweden'])
+    return render_to_kml("world/placemarks.kml", {'places' : ninetyfivepolygon})
+
+def eu2004(request):
+    zerofourpolygon = WorldBorder.objects.kml().filter(name__in=['Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic', 'Slovakia', 'Hungary', 'Cyprus'])
+    return render_to_kml("world/placemarks.kml", {'places' : zerofourpolygon})
+
+def eu2007(request):
+    zerosevenpolygon = WorldBorder.objects.kml().filter(name__in=['Romania', 'Bulgaria'])
+    return render_to_kml("world/placemarks.kml", {'places' : zerosevenpolygon})
+
+def eu2013(request):
+    thirteenpolygon = WorldBorder.objects.kml().filter(name__in=['Croatia'])
+    return render_to_kml("world/placemarks.kml", {'places' : thirteenpolygon})
