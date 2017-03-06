@@ -59,8 +59,16 @@
                         ]
         });
 
+
+
         map.addLayer(OriginalEu);
 
+
+
+
+      }
+
+      function add() {
         var AdditionEu = new ol.layer.Vector({
         title: 'Polygon',
       	source: new ol.source.Vector({
@@ -77,7 +85,9 @@
                             })
                         ]
       });
-      map.addLayer(AdditionEu);
+
+        map.addLayer(AdditionEu)
+
       }
 
 
@@ -88,6 +98,8 @@
     <div id="map" class="map"></div>
 
     <div id="basicMap"></div>
+
+    <input type="button" value="Add Layer" onclick="add()">
     {% for item in borders %}
     	<p>{{item.name}}<p>
     {% endfor %}
