@@ -222,6 +222,10 @@
 
       }
 
+      function clearLayers() {
+        map.getLayers().removeAt(1);
+      }
+
 
 
     </script>
@@ -242,6 +246,7 @@
     {% for entry in borders %}
     <option value="{{ entry.id }}">{{ entry.name }}</option>
   {% endfor %}
+    <input type="button" value="Clear" onclick="clearLayers()">
   </body>
 </select>
 </html>
