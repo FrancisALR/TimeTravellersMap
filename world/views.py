@@ -43,3 +43,7 @@ def eu2007(request):
 def eu2013(request):
     thirteenpolygon = WorldBorder.objects.kml().filter(name__in=['Croatia'])
     return render_to_kml("world/placemarks.kml", {'places' : thirteenpolygon})
+
+def allcountries(request):
+    allcountries = WorldBorder.objects.kml()
+    return render_to_kml("world/placemarks.kml", {'places' : allcountries})
