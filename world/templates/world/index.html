@@ -19,6 +19,18 @@
 
 
     <script type=text/javascript>
+
+    var sourceF = new ol.source.Vector({
+      projection:new ol.proj.get("EPSG:3857"),
+      url:'http://localhost:8080/allcountries',
+      format: new ol.format.KML({
+        extractStyles:false
+      })
+    })
+    var generalLayer = new ol.layer.Vector({
+      source: sourceF
+     })
+
     function init() {
 
     // create a layer with the OSM source
@@ -44,24 +56,22 @@
 	      })
 	    });
       features = new ol.Collection();
+
       map.addLayer(stamen);
 
-      var AdditionEu = new ol.layer.Vector({
-      title: 'Polygon',
-      source: new ol.source.Vector({
+      var sourceF = new ol.source.Vector({
         projection:new ol.proj.get("EPSG:3857"),
-        url:'http://localhost:8080/additionalEU',
+        url:'http://localhost:8080/allcountries',
         format: new ol.format.KML({
-        extractStyles:false
+          extractStyles:false
         })
-        }),
-        style: [
-                          new ol.style.Style({
-                              stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                              fill: new ol.style.Fill({color: [0,255,255,0.5]})
-                          })
-                      ]
-    });
+      })
+
+
+      map.addLayer(generalLayer)
+
+       generalLayer.getSource().on('change', function(evt){
+         generalLayer.setVisible(false)})
 
       }
 
@@ -72,32 +82,18 @@
 
       function addingFeaturesToLayer() {
 
-      var name = document.getElementById('value').value;
+      var names = document.getElementById('value').value;
+      var nameArray = names.split(" ");
 
-      var sourceF = new ol.source.Vector({
-        projection:new ol.proj.get("EPSG:3857"),
-        url:'http://localhost:8080/allcountries',
-        format: new ol.format.KML({
-          extractStyles:false
-        })
-      })
-      var generalLayer = new ol.layer.Vector({
-        source: sourceF
-      })
+      for (let name of nameArray) {
+        console.log(name)
 
-
-
-
-      map.addLayer(generalLayer)
 
       var featureList = new Array;
 
       var specificSource = new ol.source.Vector({
       })
 
-      generalLayer.getSource().on('change', function(evt){
-        var source=evt.target;
-        if(source.getState() === 'ready'){
      features=generalLayer.getSource().getFeatures();
      for (var i=0; i<features.length; i++) {
        if (features[i].getProperties().name == name) {
@@ -108,9 +104,9 @@
          console.log(featureList)
          break;
        }
-     }
+
         }
-      })
+
 
 
 
@@ -127,6 +123,7 @@
       map.addLayer(specificLayer)
 
       }
+    }
 
 
 
@@ -323,6 +320,12 @@
         map.getLayers().removeAt(1);
       }
 
+      function testPost() {
+        var name = document.getElementById('valuetest').value;
+        console.log(name)
+
+      }
+
 
     </script>
   </head>
@@ -344,7 +347,12 @@
     <option value="{{ entry.id }}">{{ entry.name }}</option>
   {% endfor %}
     <input type="button" value="Clear" onclick="clearLayers()">
-    <input type="button" value="test" onclick="addingFeaturesToLayer('France')">
+
+    <form method="post">
+      {% csrf_token %}
+        <input type="text" name="value" id='valuetest' value="value"/>
+        <<input type="submit" value="Start">
+    </form>
 
   </div>
 
