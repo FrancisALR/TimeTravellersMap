@@ -20,314 +20,344 @@
 
     <script type=text/javascript>
 
+    var js_list = "{{borders}}";
+
     var sourceF = new ol.source.Vector({
-      projection:new ol.proj.get("EPSG:3857"),
-      url:'http://localhost:8080/allcountries',
-      format: new ol.format.KML({
-        extractStyles:false
-      })
+        projection: new ol.proj.get("EPSG:3857"),
+        url: 'http://localhost:8080/allcountries',
+        format: new ol.format.KML({
+            extractStyles: false
+        })
     })
     var generalLayer = new ol.layer.Vector({
-      source: sourceF
-     })
+        source: sourceF
+    })
 
     function init() {
 
-    // create a layer with the OSM source
+        // create a layer with the OSM source
         var layer = new ol.layer.Tile({
-          source: new ol.source.Stamen({
-            layer: 'toner-lite'
-          })
+            source: new ol.source.Stamen({
+                layer: 'toner-lite'
+            })
         });
 
         map = new ol.Map({
-		  target:'map',
-		  renderer:'canvas',
-		  view: new ol.View({
-			projection: 'EPSG:3857',
-			center: ol.proj.transform([2.4, 48], 'EPSG:4326', 'EPSG:3857'),
-			zoom:4,
-		  })
-	    });
+            target: 'map',
+            renderer: 'canvas',
+            view: new ol.View({
+                projection: 'EPSG:3857',
+                center: ol.proj.transform([2.4, 48], 'EPSG:4326', 'EPSG:3857'),
+                zoom: 4,
+            })
+        });
 
-	    var stamen = new ol.layer.Tile({
-	    source: new ol.source.Stamen({
-	      layer: 'toner-lite'
-	      })
-	    });
-      features = new ol.Collection();
+        var stamen = new ol.layer.Tile({
+            source: new ol.source.Stamen({
+                layer: 'toner-lite'
+            })
+        });
 
-      map.addLayer(stamen);
+        map.addLayer(stamen);
 
-      var sourceF = new ol.source.Vector({
-        projection:new ol.proj.get("EPSG:3857"),
-        url:'http://localhost:8080/allcountries',
-        format: new ol.format.KML({
-          extractStyles:false
+        var sourceF = new ol.source.Vector({
+            projection: new ol.proj.get("EPSG:3857"),
+            url: 'http://localhost:8080/allcountries',
+            format: new ol.format.KML({
+                extractStyles: false
+            })
         })
-      })
 
 
-      map.addLayer(generalLayer)
+        map.addLayer(generalLayer)
 
-       generalLayer.getSource().on('change', function(evt){
-         generalLayer.setVisible(false)})
+        generalLayer.getSource().on('change', function(evt) {
+            generalLayer.setVisible(false)
+        })
 
-      }
-
-
-      function checkLayer(layer) {
-
-      }
-
-      function addingFeaturesToLayer() {
-
-      var names = document.getElementById('value').value;
-      var nameArray = names.split(" ");
-
-      for (let name of nameArray) {
-        console.log(name)
+    }
 
 
-      var featureList = new Array;
+    function test() {
 
-      var specificSource = new ol.source.Vector({
-      })
+    }
 
-     features=generalLayer.getSource().getFeatures();
-     for (var i=0; i<features.length; i++) {
-       if (features[i].getProperties().name == name) {
-         featureList.push(features[i])
-         specificSource.addFeature(features[i])
-         console.log(features[i])
-         map.removeLayer(generalLayer)
-         console.log(featureList)
-         break;
-       }
+    function addingFeaturesToLayer() {
+
+        var names = document.getElementById('value').value;
+        var nameArray = names.split(", ");
+
+
+        for (let name of nameArray) {
+            //console.log(name)
+
+
+            var featureList = new Array;
+
+            var specificSource = new ol.source.Vector({})
+
+            features = generalLayer.getSource().getFeatures();
+            for (var i = 0; i < features.length; i++) {
+                if (features[i].getProperties().name == name) {
+                    featureList.push(features[i])
+                    specificSource.addFeature(features[i])
+                    //console.log(features[i])
+                    map.removeLayer(generalLayer)
+                    //console.log(featureList)
+                    break;
+                }
+
+            }
+
+
+
+
+            var specificLayer = new ol.layer.Vector({
+                source: specificSource,
+                style: [
+                    new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: 'black',
+                            width: 1
+                        }),
+                        fill: new ol.style.Fill({
+                            color: [0, 255, 255, 0.5]
+                        })
+                    })
+                ]
+            })
+            //console.log(specificSource.getFeatures())
+            map.addLayer(specificLayer)
 
         }
-
-
-
-
-      var specificLayer = new ol.layer.Vector({
-        source: specificSource,
-        style: [
-                          new ol.style.Style({
-                              stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                              fill: new ol.style.Fill({color: [0,255,255,0.5]})
-                          })
-                      ]
-      })
-      console.log(specificSource.getFeatures())
-      map.addLayer(specificLayer)
-
-      }
     }
 
 
 
-      function original() {
-      var OriginalEu = new ol.layer.Vector({
-        title: 'Polygon',
-      	source: new ol.source.Vector({
-          projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/originalEU',
-          format: new ol.format.KML({
-          extractStyles:false
-          })
-          }),
-           style: [
-                            new ol.style.Style({
-                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                                fill: new ol.style.Fill({color: [0,255,0,0.5]})
-                            })
-                        ]
+    function original() {
+        var OriginalEu = new ol.layer.Vector({
+            title: 'Polygon',
+            source: new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/originalEU',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            style: [
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 1
+                    }),
+                    fill: new ol.style.Fill({
+                        color: [0, 255, 0, 0.5]
+                    })
+                })
+            ]
         });
         map.addLayer(OriginalEu)
-        OriginalEu.getSource().on('change', function(evt){
-          var source=evt.target;
-          if(source.getState() === 'ready'){
-       features=OriginalEu.getSource().getFeatures();
-       for (var i=0; i<features.length; i++) {
-         if (features[i].getProperties().name == "Luxembourg") {
-           console.log('found')
-           break;
-         }
-       }
-          }
+
+
+
+
+
+    }
+
+    function add() {
+        var AdditionEu = new ol.layer.Vector({
+            title: 'Polygon',
+            source: new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/additionalEU',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            style: [
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 1
+                    }),
+                    fill: new ol.style.Fill({
+                        color: [0, 255, 255, 0.5]
+                    })
+                })
+            ]
         });
 
+        map.addLayer(AdditionEu)
 
+    }
 
-
-      }
-
-      function add() {
+    function add2() {
         var AdditionEu = new ol.layer.Vector({
-        title: 'Polygon',
-      	source: new ol.source.Vector({
-          projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/additionalEU',
-          format: new ol.format.KML({
-          extractStyles:false
-          })
-          }),
-          style: [
-                            new ol.style.Style({
-                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                                fill: new ol.style.Fill({color: [0,255,255,0.5]})
-                            })
-                        ]
-      });
+            title: 'Polygon',
+            source: new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/greecetoEU',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            style: [
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 1
+                    }),
+                    fill: new ol.style.Fill({
+                        color: [255, 0, 255, 0.5]
+                    })
+                })
+            ]
+        });
 
         map.addLayer(AdditionEu)
 
-      }
+    }
 
-      function add2() {
+    function add1986() {
         var AdditionEu = new ol.layer.Vector({
-        title: 'Polygon',
-      	source: new ol.source.Vector({
-          projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/greecetoEU',
-          format: new ol.format.KML({
-          extractStyles:false
-          })
-          }),
-          style: [
-                            new ol.style.Style({
-                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                                fill: new ol.style.Fill({color: [255,0,255,0.5]})
-                            })
-                        ]
-      });
+            title: 'Polygon',
+            source: new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/1986eu',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            style: [
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 1
+                    }),
+                    fill: new ol.style.Fill({
+                        color: [128, 0, 0, 0.5]
+                    })
+                })
+            ]
+        });
 
         map.addLayer(AdditionEu)
 
-      }
-      function add1986() {
+    }
+
+    function add1995() {
         var AdditionEu = new ol.layer.Vector({
-        title: 'Polygon',
-      	source: new ol.source.Vector({
-          projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/1986eu',
-          format: new ol.format.KML({
-          extractStyles:false
-          })
-          }),
-          style: [
-                            new ol.style.Style({
-                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                                fill: new ol.style.Fill({color: [128,0,0,0.5]})
-                            })
-                        ]
-      });
+            title: 'Polygon',
+            source: new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/1995eu',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            style: [
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 1
+                    }),
+                    fill: new ol.style.Fill({
+                        color: [0, 128, 128, 0.5]
+                    })
+                })
+            ]
+        });
 
         map.addLayer(AdditionEu)
 
-      }
-      function add1995() {
+    }
+
+    function add2004() {
         var AdditionEu = new ol.layer.Vector({
-        title: 'Polygon',
-      	source: new ol.source.Vector({
-          projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/1995eu',
-          format: new ol.format.KML({
-          extractStyles:false
-          })
-          }),
-          style: [
-                            new ol.style.Style({
-                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                                fill: new ol.style.Fill({color: [0,128,128,0.5]})
-                            })
-                        ]
-      });
+            title: 'Polygon',
+            source: new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/2004eu',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            style: [
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 1
+                    }),
+                    fill: new ol.style.Fill({
+                        color: [255, 255, 0, 0.5]
+                    })
+                })
+            ]
+        });
 
         map.addLayer(AdditionEu)
 
-      }
+    }
 
-      function add2004() {
+    function add2007() {
         var AdditionEu = new ol.layer.Vector({
-        title: 'Polygon',
-      	source: new ol.source.Vector({
-          projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/2004eu',
-          format: new ol.format.KML({
-          extractStyles:false
-          })
-          }),
-          style: [
-                            new ol.style.Style({
-                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                                fill: new ol.style.Fill({color: [255,255,0,0.5]})
-                            })
-                        ]
-      });
+            title: 'Polygon',
+            source: new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/2007eu',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            style: [
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 1
+                    }),
+                    fill: new ol.style.Fill({
+                        color: [128, 128, 128, 0.5]
+                    })
+                })
+            ]
+        });
 
         map.addLayer(AdditionEu)
 
-      }
+    }
 
-      function add2007() {
+    function add2013() {
         var AdditionEu = new ol.layer.Vector({
-        title: 'Polygon',
-      	source: new ol.source.Vector({
-          projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/2007eu',
-          format: new ol.format.KML({
-          extractStyles:false
-          })
-          }),
-          style: [
-                            new ol.style.Style({
-                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                                fill: new ol.style.Fill({color: [128,128,128,0.5]})
-                            })
-                        ]
-      });
+            title: 'Polygon',
+            source: new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/2013eu',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            style: [
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 1
+                    }),
+                    fill: new ol.style.Fill({
+                        color: [0, 0, 128, 0.5]
+                    })
+                })
+            ]
+        });
 
         map.addLayer(AdditionEu)
 
-      }
+    }
 
-      function add2013() {
-        var AdditionEu = new ol.layer.Vector({
-        title: 'Polygon',
-      	source: new ol.source.Vector({
-          projection:new ol.proj.get("EPSG:3857"),
-          url:'http://localhost:8080/2013eu',
-          format: new ol.format.KML({
-          extractStyles:false
-          })
-          }),
-          style: [
-                            new ol.style.Style({
-                                stroke: new ol.style.Stroke({color: 'black', width: 1}),
-                                fill: new ol.style.Fill({color: [0,0,128,0.5]})
-                            })
-                        ]
-      });
-
-        map.addLayer(AdditionEu)
-
-      }
-
-      function clearLayers() {
+    function clearLayers() {
 
         map.getLayers().removeAt(1);
-      }
-
-      function testPost() {
-        var name = document.getElementById('valuetest').value;
-        console.log(name)
-
-      }
-
-
-    </script>
+    }
+</script>
   </head>
   <body onload='init()'>
     <div id="map" class="map"></div>
@@ -340,19 +370,16 @@
     <input type="button" value="2004" onclick="add2004()">
     <input type="button" value="2007" onclick="add2007()">
     <input type="button" value="2013" onclick="add2013()">
-    <input type="text" name="value" id='value' />
+    <form id ='addFeatureForm'>
+    <input type="text" name="addFeatureValue" id='value' />
     <input type="button" value="submit" onclick="addingFeaturesToLayer()" />
+  </form>
     <select name="item_id">
     {% for entry in borders %}
     <option value="{{ entry.id }}">{{ entry.name }}</option>
   {% endfor %}
     <input type="button" value="Clear" onclick="clearLayers()">
 
-    <form method="post">
-      {% csrf_token %}
-        <input type="text" name="value" id='valuetest' value="value"/>
-        <<input type="submit" value="Start">
-    </form>
 
   </div>
 

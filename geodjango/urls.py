@@ -30,6 +30,5 @@ urlpatterns = [
     url(r'^2004eu', eu2004),
     url(r'^2007eu', eu2007),
     url(r'^2013eu', eu2013),
-    url(r'^allcountries', allcountries),
-    url(r'^test', test)
+    url(r'^allcountries', allcountries)
 ]

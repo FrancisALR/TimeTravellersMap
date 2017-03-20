@@ -6,13 +6,8 @@ from django.core.serializers import serialize
 from .models import WorldBorder
 
 def index(request):
-    return render(request, 'world/index.html', { 'borders' : WorldBorder.objects.all()
-    })
+    return render(request, 'world/index.html', { 'borders' : WorldBorder.objects.values('name')})
 
-def test(request):
-    val = request.POST.get('value')
-    testpolygons = WorldBorder.objects.kml().filter(name__in[val])
-    return render_to_kml("world/placemarks.kml", {'places': testpolygons})
 
 def originaleu(request):
   polygons = WorldBorder.objects.kml().filter(name__in=['France','Belgium','Germany', 'Luxembourg', 'Italy', 'Netherlands'])
