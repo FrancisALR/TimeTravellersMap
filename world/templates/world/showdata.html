@@ -1,0 +1,6 @@
+<select name="item_id">
+
+{% for entry in allayers %}
+<option value="{{ entry.id }}">{{ entry.countrylist }}</option>
+
+  {% endfor %}

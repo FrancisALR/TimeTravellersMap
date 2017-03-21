@@ -17,10 +17,11 @@
     <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
-
     <script type=text/javascript>
 
-    var js_list = "{{borders}}";
+    var js_list = "{{names|escapejs}}"
+
+    console.log(js_list)
 
     var sourceF = new ol.source.Vector({
         projection: new ol.proj.get("EPSG:3857"),
@@ -380,6 +381,7 @@
   {% endfor %}
     <input type="button" value="Clear" onclick="clearLayers()">
 
+    
 
   </div>
 

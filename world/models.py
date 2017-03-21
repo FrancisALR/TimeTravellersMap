@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from django.core.serializers import serialize
+from django.contrib.postgres.fields import ArrayField
 
 class WorldBorder(models.Model):
     # Regular Django fields corresponding to the attributes in the
@@ -20,5 +21,12 @@ class WorldBorder(models.Model):
     mpoly = models.MultiPolygonField()
 
     # Returns the string representation of the model.
+    def __str__(self):              # __unicode__ on Python 2
+        return self.name
+
+class countryLists(models.Model):
+    layername = models.CharField(max_length=50)
+    countrylist = ArrayField(models.CharField(max_length=50), blank=True)
+
     def __str__(self):              # __unicode__ on Python 2
         return self.name

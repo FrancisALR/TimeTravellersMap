@@ -1,13 +1,40 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.shortcuts import render
+import json
 from django.contrib.gis.shortcuts import render_to_kml
 from django.core.serializers import serialize
 from .models import WorldBorder
+from .models import countryLists
+from world.forms import CountryForm
 
 def index(request):
-    return render(request, 'world/index.html', { 'borders' : WorldBorder.objects.values('name')})
+    query = WorldBorder.objects.values_list('name', flat=True)
+    querylist = list(query)
+    json_data = json.dumps(querylist)
+    return render(request, 'world/index.html', {"names": json_data})
 
+def showdata(request):
+    allayers = countryLists.objects.all()
+    return render(request, 'world/showdata.html', {'allayers': allayers, })
+
+def addlayer(request):
+    print(request.method)
+    if request.method == 'POST':  # if the form has been filled
+
+        form = CountryForm(request.POST)
+
+        if form.is_valid():
+            name = request.POST.get('name', '')
+            countriesstring = request.POST.get('listofcountries', '')
+            countrylist = countriesstring.split(", ")
+            new_countrylist = countryLists(layername=name, countrylist=countrylist)
+            new_countrylist.save()
+
+            return render(request, 'world/index.html')
+    else:
+        form=CountryForm()
+        return render(request, 'world/addlayer.html', {'form' :form })
 
 def originaleu(request):
   polygons = WorldBorder.objects.kml().filter(name__in=['France','Belgium','Germany', 'Luxembourg', 'Italy', 'Netherlands'])
