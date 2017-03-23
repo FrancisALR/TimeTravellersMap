@@ -29,4 +29,4 @@ class countryLists(models.Model):
     countrylist = ArrayField(models.CharField(max_length=50), blank=True)
 
     def __str__(self):              # __unicode__ on Python 2
-        return self.name
+        return self.layername

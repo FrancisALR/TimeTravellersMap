@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import json
 from django.contrib.gis.shortcuts import render_to_kml
 from django.core.serializers import serialize
@@ -12,7 +12,9 @@ def index(request):
     query = WorldBorder.objects.values_list('name', flat=True)
     querylist = list(query)
     json_data = json.dumps(querylist)
-    return render(request, 'world/index.html', {"names": json_data})
+
+    allayers = countryLists.objects.all()
+    return render(request, 'world/index.html', {"names": json_data, "userLayers": allayers})
 
 def showdata(request):
     allayers = countryLists.objects.all()
@@ -31,7 +33,7 @@ def addlayer(request):
             new_countrylist = countryLists(layername=name, countrylist=countrylist)
             new_countrylist.save()
 
-            return render(request, 'world/index.html')
+            return redirect('world/')
     else:
         form=CountryForm()
         return render(request, 'world/addlayer.html', {'form' :form })
