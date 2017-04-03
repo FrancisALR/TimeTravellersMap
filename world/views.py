@@ -5,19 +5,21 @@ import json
 from django.contrib.gis.shortcuts import render_to_kml
 from django.core.serializers import serialize
 from .models import WorldBorder
-from .models import countryLists
-from world.forms import CountryForm
+from .models import CountryLists
+from .models import UserMaps
+from world.forms import CountryForm, UserMapForm
 
 def index(request):
     query = WorldBorder.objects.values_list('name', flat=True)
     querylist = list(query)
     json_data = json.dumps(querylist)
 
-    allayers = countryLists.objects.all()
-    return render(request, 'world/index.html', {"names": json_data, "userLayers": allayers})
+    allayers = CountryLists.objects.all()
+    return render(request, 'world/index.html', {"names": json_data, "userLayers": allayers, "borders" : WorldBorder.objects.all()})
 
 def showdata(request):
-    allayers = countryLists.objects.all()
+
+    allayers = CountryLists.objects.all()
     return render(request, 'world/showdata.html', {'allayers': allayers, })
 
 def addlayer(request):
@@ -30,13 +32,14 @@ def addlayer(request):
             name = request.POST.get('name', '')
             countriesstring = request.POST.get('listofcountries', '')
             countrylist = countriesstring.split(", ")
-            new_countrylist = countryLists(layername=name, countrylist=countrylist)
+            year = request.POST.get('year', '')
+            new_countrylist = CountryLists(layername=name, countrylist=countrylist, year=year)
             new_countrylist.save()
 
             return redirect('world/')
     else:
         form=CountryForm()
-        return render(request, 'world/addlayer.html', {'form' :form })
+        return render(request, 'world/addlayer.html', {'form' :form})
 
 def originaleu(request):
   polygons = WorldBorder.objects.kml().filter(name__in=['France','Belgium','Germany', 'Luxembourg', 'Italy', 'Netherlands'])

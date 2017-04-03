@@ -21,7 +21,7 @@
 
     var js_list = "{{names|escapejs}}"
 
-    //console.log(js_list)
+    console.log(js_list)
 
     var sourceF = new ol.source.Vector({
         projection: new ol.proj.get("EPSG:3857"),
@@ -73,13 +73,8 @@
         map.addLayer(generalLayer)
 
         generalLayer.getSource().on('change', function(evt) {
-            generalLayer.setVisible(false)
+          generalLayer.setVisible(false)
         })
-
-    }
-
-
-    function test() {
 
     }
 
@@ -425,12 +420,11 @@
     <input type="button" value="Clear" onclick="clearLayers()">
         <select id="dropdown">
           {% for entry in userLayers %}
-          <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} </option>
+          <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
           {% endfor %}
           <input type="button"  value="submit" onclick="addingSavedFeaturesToLayer()" />
 
     </select>
-
     </div>
 
 </body>
