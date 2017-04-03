@@ -12,3 +12,5 @@ class UserMapForm(ModelForm):
     class Meta:
         model = UserMaps
         fields = ('mapname', )
+
+MapFormSet = inlineformset_factory(UserMaps, CountryLists, extra = 1 ,fields=('layername','countrylist', 'year' ))

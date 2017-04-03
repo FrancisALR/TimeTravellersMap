@@ -7,20 +7,51 @@ from django.core.serializers import serialize
 from .models import WorldBorder
 from .models import CountryLists
 from .models import UserMaps
-from world.forms import CountryForm, UserMapForm
+from world.forms import CountryForm, UserMapForm, MapFormSet
 
 def index(request):
     query = WorldBorder.objects.values_list('name', flat=True)
     querylist = list(query)
     json_data = json.dumps(querylist)
-
     allayers = CountryLists.objects.all()
-    return render(request, 'world/index.html', {"names": json_data, "userLayers": allayers, "borders" : WorldBorder.objects.all()})
+    allmaps = UserMaps.objects.all()
+    return render(request, 'world/index.html', {"names": json_data, "userLayers": allayers, "borders" : WorldBorder.objects.all(), "usermaps" : allmaps})
 
 def showdata(request):
-
-    allayers = CountryLists.objects.all()
+    # allayers = CountryLists.objects.all()
+    allayers = UserMaps.objects.all()
     return render(request, 'world/showdata.html', {'allayers': allayers, })
+
+def addusermap(request):
+    if request.method == 'POST':
+
+        form = UserMapForm(request.POST)
+        if form.is_valid():
+            name = request.POST.get('mapname', '')
+            new_usermap = UserMaps(mapname=name)
+            new_usermap.save()
+
+            return redirect('world/')
+    else:
+        form = UserMapForm()
+        return render(request, 'world/addusermap.html', {'form' : form})
+
+def addbothtest(request):
+    if request.POST:
+
+        form = UserMapForm(request.POST)
+        if form.is_valid():
+            usermap = form.save(commit=False)
+            map_formset = MapFormSet(request.POST, instance=usermap)
+            if map_formset.is_valid():
+                usermap.save()
+                map_formset.save()
+                return redirect('world/')
+    else:
+        form = UserMapForm()
+        map_formset = MapFormSet(instance=UserMaps())
+    return render(request, 'world/addbothtest.html', {'form' : form,"map_formset": map_formset})
+
 
 def addlayer(request):
     print(request.method)

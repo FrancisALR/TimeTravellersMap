@@ -34,7 +34,7 @@ class CountryLists(models.Model):
     layername = models.CharField(max_length=50)
     countrylist = ArrayField(models.CharField(max_length=50), blank=True)
     year = models.IntegerField()
-    relatedmap = models.ForeignKey(UserMaps, null=True, blank=True)
+    relatedmap = models.ForeignKey(UserMaps, null=True, blank=True, related_name="layers")
 
     def __str__(self):              # __unicode__ on Python 2
         return self.layername

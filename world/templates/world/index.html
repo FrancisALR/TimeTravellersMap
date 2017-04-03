@@ -18,9 +18,7 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
     <script type=text/javascript>
-
     var js_list = "{{names|escapejs}}"
-
     console.log(js_list)
 
     var sourceF = new ol.source.Vector({
@@ -403,6 +401,7 @@
 </script>
   </head>
   <body onload='init()'>
+    <input type="button" value = "test" onclick="createbuttons()">
     <div id="map" class="map"></div>
     <div id="buttons" class="buttons">
         <input type="button" value="1951" onclick="original()">
@@ -417,15 +416,21 @@
             <input type="text" name="addFeatureValue" id='value' />
             <input type="button" value="submit" onclick="addingFeaturesToLayer()" />
         </form>
+
     <input type="button" value="Clear" onclick="clearLayers()">
+    
         <select id="dropdown">
           {% for entry in userLayers %}
           <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
           {% endfor %}
           <input type="button"  value="submit" onclick="addingSavedFeaturesToLayer()" />
-
     </select>
-    </div>
+
+    <select id = "usermapdropdown">
+      {% for entry in usermaps %}
+      <option value="{{ entry.mapname }}"> {{ entry.mapname }}</option>
+      {% endfor %}
+    </select>
 
 </body>
 </select>

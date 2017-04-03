@@ -32,5 +32,7 @@ urlpatterns = [
     url(r'^2013eu', eu2013),
     url(r'^allcountries', allcountries),
     url(r'^addlayer$', addlayer),
-    url(r'^showdata$', showdata)
+    url(r'^showdata$', showdata),
+    url(r'^addusermap$', addusermap),
+    url(r'^addbothtest', addbothtest)
     ]
