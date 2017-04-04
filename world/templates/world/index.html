@@ -76,13 +76,68 @@
 
     }
 
+    function addingSavedMapFeaturesToLayer() {
+
+        var names = document.getElementById('layer');
+
+        var text = names.options[names.selectedIndex].text;
+        var string = text.substring(text.lastIndexOf("[")+2,text.lastIndexOf("]")-1);
+        var nameArray = string.split(", ");
+        console.log(nameArray)
+
+        for (let name of nameArray) {
+          console.log(name)
+            var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
+            var fullytrimmed = trimmedname.trim();
+
+
+            var featureList = new Array;
+
+            var specificSource = new ol.source.Vector({})
+
+            features = generalLayer.getSource().getFeatures();
+            for (var i = 0; i < features.length; i++) {
+                if (features[i].getProperties().name == trimmedname) {
+                    featureList.push(features[i])
+                    specificSource.addFeature(features[i])
+                    //console.log(features[i])
+                    map.removeLayer(generalLayer)
+                    //console.log(featureList)
+                    break;
+                }
+
+            }
+
+
+
+
+            var specificLayer = new ol.layer.Vector({
+                source: specificSource,
+                style: [
+                    new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: 'black',
+                            width: 1
+                        }),
+                        fill: new ol.style.Fill({
+                            color: [0, 255, 255, 0.5]
+                        })
+                    })
+                ]
+            })
+            //console.log(specificSource.getFeatures())
+            map.addLayer(specificLayer)
+
+        }
+    }
+
     function addingSavedFeaturesToLayer() {
 
         var names = document.getElementById('dropdown');
         var text = names.options[names.selectedIndex].text;
         var string = text.substring(text.lastIndexOf("[")+2,text.lastIndexOf("]")-1);
         var nameArray = string.split(", ");
-
+        console.log(nameArray);
         for (let name of nameArray) {
             var trimmedname = name.replace(/^[\n']+|[\n']+$/g, "");
             var fullytrimmed = trimmedname.trim();
@@ -401,7 +456,7 @@
 </script>
   </head>
   <body onload='init()'>
-    <input type="button" value = "test" onclick="createbuttons()">
+    <a href="addbothtest">Add map</a>
     <div id="map" class="map"></div>
     <div id="buttons" class="buttons">
         <input type="button" value="1951" onclick="original()">
@@ -418,7 +473,7 @@
         </form>
 
     <input type="button" value="Clear" onclick="clearLayers()">
-    
+
         <select id="dropdown">
           {% for entry in userLayers %}
           <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
@@ -426,11 +481,49 @@
           <input type="button"  value="submit" onclick="addingSavedFeaturesToLayer()" />
     </select>
 
-    <select id = "usermapdropdown">
-      {% for entry in usermaps %}
-      <option value="{{ entry.mapname }}"> {{ entry.mapname }}</option>
-      {% endfor %}
+    <form action = "" method = "get" accept-charset = "utf-8" >
+    <select name = "map" id = "map" >
+    <option value = "Z"> select a Map </option >
+    {% for entry in usermaps %}
+    <option value = "{{entry.mapname}}" > {{entry.mapname}} </option >
+    {% endfor%}
     </select>
+    <select name = "layer" id = "layer" disabled = "true" >
+    <option> select a layer </option>
+    </select>
+    </form>
+
+  <script>
+    $(document).ready(
+        function() {
+            $("select#map").change(function() {
+                if ($(this).val() == 'Z') {
+                    $("select#layer").html("<option>Select a layer</option>");
+                    $("select#layer").attr('disabled', true);
+                } else {
+                    var url = "/map/" + $(this).val() + "/all_json_models";
+                    var map = $(this).val();
+                    $.getJSON(url, function(layers) {
+                        var options = '<option value="Z">Select a layer</option>';
+                        for (var i = 0; i < layers.length; i++) {
+                            options += '<option value="' + layers[i].pk + '">' + layers[i].fields['countrylist'] + '</option>';
+                        }
+                        $("select#layer").html(options);
+                        $("select#layer option:first").attr('selected', 'selected');
+                        $("select#layer").attr('disabled', false);
+                    });
+                }
+            });
+            $("select#layer").change(function(vent) {
+                console.log('entered')
+                addingSavedMapFeaturesToLayer();
+                if ($(this).val() == -1) {
+                    return;
+                }
+            });
+        });
+</script>
+
 
 </body>
 </select>

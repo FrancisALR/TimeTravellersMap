@@ -17,10 +17,11 @@ def index(request):
     allmaps = UserMaps.objects.all()
     return render(request, 'world/index.html', {"names": json_data, "userLayers": allayers, "borders" : WorldBorder.objects.all(), "usermaps" : allmaps})
 
-def showdata(request):
-    # allayers = CountryLists.objects.all()
-    allayers = UserMaps.objects.all()
-    return render(request, 'world/showdata.html', {'allayers': allayers, })
+def all_json_models (request, map):
+    current_map = UserMaps.objects.get(mapname=map)
+    models = CountryLists.objects.all().filter(relatedmap=current_map)
+    json_models = serialize("json",models)
+    return HttpResponse (json_models, content_type="application/javascript")
 
 def addusermap(request):
     if request.method == 'POST':
@@ -42,15 +43,15 @@ def addbothtest(request):
         form = UserMapForm(request.POST)
         if form.is_valid():
             usermap = form.save(commit=False)
-            map_formset = MapFormSet(request.POST, instance=usermap)
+            map_formset = MapFormSet(request.POST, instance=usermap, prefix="nested")
             if map_formset.is_valid():
                 usermap.save()
                 map_formset.save()
                 return redirect('world/')
     else:
         form = UserMapForm()
-        map_formset = MapFormSet(instance=UserMaps())
-    return render(request, 'world/addbothtest.html', {'form' : form,"map_formset": map_formset})
+        map_formset = MapFormSet(instance=UserMaps(), prefix="nested")
+    return render(request, 'world/addbothtest.html', {'form' : form, "map_formset": map_formset})
 
 
 def addlayer(request):

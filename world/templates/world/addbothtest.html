@@ -1,58 +1,47 @@
 <html>
-  <head>
+
+<head>
     <title>A Time Travellers Map</title>
     <style>
-      .buttons {
-        margin:auto;
-            }
+        .buttons {
+            margin: auto;
+        }
     </style>
     <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
-<script>
-function addForm(btn, prefix) {
-        var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-        var row = $('.dynamic-form:first').clone(true).get(0);
-        $(row).removeAttr('id').insertAfter($('.dynamic-form:last')).children('.hidden').removeClass('hidden');
-        $(row).children().not(':last').children().each(function() {
-    	    updateElementIndex(this, prefix, formCount);
-    	    $(this).val('');
+    <script>
+        $(function() {
+            $('#add_more').click(function() {
+                console.log('clicked')
+                var formcount = $('#id_nested-TOTAL_FORMS').val();
+                console.log(formcount)
+                $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+                $('#id_nested-TOTAL_FORMS').val(parseInt(formcount) + 1);
+            })
         });
-        $(row).find('.delete-row').click(function() {
-    	    deleteForm(this, prefix);
-        });
-        $('#id_' + prefix + '-TOTAL_FORMS').val(formCount + 1);
-        return false;
-    }
-
-    $(function () {
-        $('.add-row').click(function() {
-          console.log("clicked")
-    	    return addForm(this, '{{ map_formset.prefix }}');
-        });
-      })
-</script>
+    </script>
 
 
 <form action="" method="post">
-    <table>
-      {% csrf_token %}
-      <div class='table'>
-        <table class="dynamic-form">
-      {{ form.as_table }}
-      {{ map_formset.as_table }}
+    {% csrf_token %}
+    <div id="form_set">
+        {{form}} {{ map_formset.management_form }} {% for form in map_formset.forms %}
+        <table class='no_error'>
+            {{ form.as_table }}
+        </table>
+        {% endfor %}
+    </div>
+    <div id="empty_form" style="display:none">
+        <table class='no_error'>
+            {{ map_formset.empty_form.as_table }}
 
+        </table>
+    </div>
 
-  </div>
-  <table id =table2 style="display:none">
-  <div style="display:none">
-      {{ map_formset.as_table }}
-  </div>
-  </table>
-
-        <th></th>
-        <td><input type="submit" name="submit" value="Submit" class="button"</td>
-      </tr>
-    </table>
-    <a href="javascript:void(0)" class="add-row">add property</a>
-  </form>
+    <th></th>
+    <td><input type="submit" name="submit" value="Submit" class="button" </td>
+        </tr>
+        </table>
+</form>
+<input type="button" value="Add More" id="add_more">
