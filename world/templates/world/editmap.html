@@ -1,0 +1,13 @@
+<table>
+  <tr>
+  <th>Map Name</th>
+  <th>Delete</th>
+  <th>Edit</th>
+</tr>
+  {% for entry in usermaps %}
+<tr>
+   <th> {{ entry.mapname }}</th>
+   <th><a href="/world/deletemap/{{entry.mapname}}">Delete</a></th>
+   <th><a href="/world/editmap/{{entry.mapname}}">Delete</a></th>
+</table>
+{% endfor%}

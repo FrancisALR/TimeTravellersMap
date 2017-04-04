@@ -16,7 +16,7 @@
                 console.log('clicked')
                 var formcount = $('#id_nested-TOTAL_FORMS').val();
                 console.log(formcount)
-                $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+                $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, formcount));
                 $('#id_nested-TOTAL_FORMS').val(parseInt(formcount) + 1);
             })
         });

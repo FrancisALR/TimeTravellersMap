@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^2013eu', views.eu2013),
     url(r'^allcountries', views.allcountries),
     url(r'^addlayer$', views.addlayer),
-    url(r'^addbothtest', views.addbothtest),
+    url(r'^addbothtest$', views.addbothtest),
     url(r'^map/(?P<map>[\w|\W]+)/all_json_models/$', views.all_json_models),
+    url(r'^deletemap/(?P<map_name>.*)$', views.deletemap),
+    url(r'^editmap', views.editmap)
 ]

@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.shortcuts import render, redirect
 import json
 from django.contrib.gis.shortcuts import render_to_kml
@@ -23,20 +23,6 @@ def all_json_models (request, map):
     json_models = serialize("json",models)
     return HttpResponse (json_models, content_type="application/javascript")
 
-def addusermap(request):
-    if request.method == 'POST':
-
-        form = UserMapForm(request.POST)
-        if form.is_valid():
-            name = request.POST.get('mapname', '')
-            new_usermap = UserMaps(mapname=name)
-            new_usermap.save()
-
-            return redirect('world/')
-    else:
-        form = UserMapForm()
-        return render(request, 'world/addusermap.html', {'form' : form})
-
 def addbothtest(request):
     if request.POST:
 
@@ -47,12 +33,11 @@ def addbothtest(request):
             if map_formset.is_valid():
                 usermap.save()
                 map_formset.save()
-                return redirect('world/')
+                return redirect('/world')
     else:
         form = UserMapForm()
         map_formset = MapFormSet(instance=UserMaps(), prefix="nested")
     return render(request, 'world/addbothtest.html', {'form' : form, "map_formset": map_formset})
-
 
 def addlayer(request):
     print(request.method)
@@ -68,7 +53,7 @@ def addlayer(request):
             new_countrylist = CountryLists(layername=name, countrylist=countrylist, year=year)
             new_countrylist.save()
 
-            return redirect('world/')
+            return redirect('/world')
     else:
         form=CountryForm()
         return render(request, 'world/addlayer.html', {'form' :form})
@@ -77,6 +62,15 @@ def originaleu(request):
   polygons = WorldBorder.objects.kml().filter(name__in=['France','Belgium','Germany', 'Luxembourg', 'Italy', 'Netherlands'])
   return render_to_kml("world/placemarks.kml", {'places': polygons})
 
+def editmap(request):
+    allayers = CountryLists.objects.all()
+    allmaps = UserMaps.objects.all()
+    return render(request, 'world/editmap.html', { "userLayers": allayers, "usermaps" : allmaps})
+
+def deletemap(request, map_name):
+    todelete = get_object_or_404(UserMaps, mapname=map_name)
+    todelete.delete()
+    return redirect('/world')
 
 def additionaleu(request):
     polygons2 = WorldBorder.objects.kml().filter(name__in=['United Kingdom','Denmark','Ireland','Gibraltar'])

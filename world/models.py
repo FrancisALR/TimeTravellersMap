@@ -35,6 +35,7 @@ class CountryLists(models.Model):
     countrylist = ArrayField(models.CharField(max_length=50),null=True, blank=True)
     year = models.IntegerField()
     info = models.TextField(default=None, blank=True, null=True)
+    layercolour = models.CharField(max_length=50)
     relatedmap = models.ForeignKey(UserMaps, null=True, blank=True, related_name="layers")
 
     def __str__(self):              # __unicode__ on Python 2
