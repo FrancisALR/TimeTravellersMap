@@ -1,585 +1,316 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'world/style.css' %}" />
+
 <!DOCTYPE HTML>
 <html>
-  <head>
+
+<head>
     <title>A Time Travellers Map</title>
-    <link  href="../bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    div.container {
-    width: 100%;
-    border: 1px solid gray;
-}
-
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #111;
-}
-
-header, footer {
-    padding: 1em;
-    color: white;
-    background-color: black;
-    clear: left;
-    text-align: center;
-}
-  #map, #layer, #dropdown {
-    width: 150px;
-  }
-    #left {
-      float: left;
-    max-width: 100px;
-    margin: 0;
-    padding: 1em;
-
-    }
-    #mapcontainer {
-      height: 400px;
-      margin-left: 250px;
-    border-left: 1px solid gray;
-    padding: 1em;
-    }
-    .clear {
-      clear: both;
-    }
-
-}
-
-    </style>
     <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
     <script type=text/javascript>
-
-    var js_list = "{{names|escapejs}}"
-    console.log(js_list)
-
-    var sourceF = new ol.source.Vector({
-        projection: new ol.proj.get("EPSG:3857"),
-        url: 'http://localhost:8080/world/allcountries',
-        format: new ol.format.KML({
-            extractStyles: false
-        })
-    })
-    var generalLayer = new ol.layer.Vector({
-        source: sourceF
-    })
-
-    function init() {
-
-        // create a layer with the OSM source
-        var layer = new ol.layer.Tile({
-            source: new ol.source.Stamen({
-                layer: 'toner-lite'
-            })
-        });
-
-        map = new ol.Map({
-            target: 'mapcontainer',
-            renderer: 'canvas',
-            view: new ol.View({
-                projection: 'EPSG:3857',
-                center: ol.proj.transform([2.4, 48], 'EPSG:4326', 'EPSG:3857'),
-                zoom: 4,
-            })
-        });
-
-        var stamen = new ol.layer.Tile({
-            source: new ol.source.Stamen({
-                layer: 'toner-lite'
-            })
-        });
-
-        map.addLayer(stamen);
+        var js_list = "{{names|escapejs}}"
+        console.log(js_list)
 
         var sourceF = new ol.source.Vector({
             projection: new ol.proj.get("EPSG:3857"),
-            url: 'http://localhost:8080/allcountries',
+            url: 'http://localhost:8080/world/allcountries',
             format: new ol.format.KML({
                 extractStyles: false
             })
         })
-
-
-        map.addLayer(generalLayer)
-
-        generalLayer.getSource().on('change', function(evt) {
-          generalLayer.setVisible(false)
+        var generalLayer = new ol.layer.Vector({
+            source: sourceF
         })
 
-    }
+        function init() {
 
-    $(document).ready(
-        function() {
-            $("select#map").change(function() {
-                if ($(this).val() == 'Z') {
-                    $("select#layer").html("<option>Select a layer</option>");
-                    $("select#layer").attr('disabled', true);
-                } else {
-                    var url = "map/" + $(this).val() + "/all_json_models";
-                    var map = $(this).val();
-                    $.getJSON(url, function(layers) {
-                        var options = '<option value="Z">Select a layer</option>';
-                        for (var i = 0; i < layers.length; i++) {
-                            options += '<option value="' + layers[i].fields['layercolour'] + '">' + layers[i].fields['countrylist'] + layers[i].fields['year'] + layers[i].fields['layercolour'] + '</option>';
-                        }
-                        $("select#layer").html(options);
-                        $("select#layer option:first").attr('selected', 'selected');
-                        $("select#layer").attr('disabled', false);
-                    });
-                }
+            // create a layer with the OSM source
+            var layer = new ol.layer.Tile({
+                source: new ol.source.Stamen({
+                    layer: 'toner-lite'
+                })
             });
-            $("select#layer").change(function(vent) {
-                console.log('entered')
-                addingSavedMapFeaturesToLayer();
-                if ($(this).val() == -1) {
-                    return;
-                }
+
+            map = new ol.Map({
+                target: 'mapcontainer',
+                renderer: 'canvas',
+                view: new ol.View({
+                    projection: 'EPSG:3857',
+                    center: ol.proj.transform([2.4, 48], 'EPSG:4326', 'EPSG:3857'),
+                    zoom: 4,
+                })
             });
-        });
 
-    function addingSavedMapFeaturesToLayer() {
+            var stamen = new ol.layer.Tile({
+                source: new ol.source.Stamen({
+                    layer: 'toner-lite'
+                })
+            });
 
-        var names = document.getElementById('layer');
-        var userColour =names.options[names.selectedIndex].value;
-        var text = names.options[names.selectedIndex].text;
-        var string = text.substring(text.lastIndexOf("[")+2,text.lastIndexOf("]")-1);
-        var nameArray = string.split(", ");
-        console.log(nameArray)
+            map.addLayer(stamen);
 
-        for (let name of nameArray) {
-          console.log(name)
-            var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
-            var fullytrimmed = trimmedname.trim();
-
-
-            var featureList = new Array;
-
-            var specificSource = new ol.source.Vector({})
-
-            features = generalLayer.getSource().getFeatures();
-            for (var i = 0; i < features.length; i++) {
-                if (features[i].getProperties().name == trimmedname) {
-                    featureList.push(features[i])
-                    specificSource.addFeature(features[i])
-                    //console.log(features[i])
-                    map.removeLayer(generalLayer)
-                    //console.log(featureList)
-                    break;
-                }
-
-            }
-
-
-
-
-            var specificLayer = new ol.layer.Vector({
-                source: specificSource,
-                style: [
-                    new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'black',
-                            width: 1
-                        }),
-                        fill: new ol.style.Fill({
-                            color: userColour
-                        })
-                    })
-                ]
+            var sourceF = new ol.source.Vector({
+                projection: new ol.proj.get("EPSG:3857"),
+                url: 'http://localhost:8080/allcountries',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
             })
-            //console.log(specificSource.getFeatures())
-            map.addLayer(specificLayer)
+
+
+            map.addLayer(generalLayer)
+
+            generalLayer.getSource().on('change', function(evt) {
+                generalLayer.setVisible(false)
+            })
 
         }
-    }
 
-    function addingSavedFeaturesToLayer() {
+        $(document).ready(
+            function() {
+                $("select#map").change(function() {
+                    if ($(this).val() == 'Z') {
+                        $("select#layer").html("<option>Select a layer</option>");
+                        $("select#layer").attr('disabled', true);
+                    } else {
+                        var url = "map/" + $(this).val() + "/all_json_models";
+                        var map = $(this).val();
+                        $.getJSON(url, function(layers) {
+                            var options = '<option value="Z">Select a layer</option>';
+                            for (var i = 0; i < layers.length; i++) {
+                                options += '<option value="' + layers[i].fields['layercolour'] + '">' + layers[i].fields['countrylist'] + layers[i].fields['year'] + layers[i].fields['layercolour'] + '</option>';
+                            }
+                            $("select#layer").html(options);
+                            $("select#layer option:first").attr('selected', 'selected');
+                            $("select#layer").attr('disabled', false);
+                        });
+                    }
+                });
+                $("select#layer").change(function(vent) {
+                    console.log('entered')
+                    addingSavedMapFeaturesToLayer();
+                    if ($(this).val() == -1) {
+                        return;
+                    }
+                });
+            });
 
-        var names = document.getElementById('dropdown');
-        var text = names.options[names.selectedIndex].text;
-        var string = text.substring(text.lastIndexOf("[")+2,text.lastIndexOf("]")-1);
-        var nameArray = string.split(", ");
-        console.log(nameArray);
-        for (let name of nameArray) {
-            var trimmedname = name.replace(/^[\n']+|[\n']+$/g, "");
-            var fullytrimmed = trimmedname.trim();
+        function addingSavedMapFeaturesToLayer() {
+
+            var names = document.getElementById('layer');
+            var userColour = names.options[names.selectedIndex].value;
+            var text = names.options[names.selectedIndex].text;
+            var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
+            var nameArray = string.split(", ");
+            console.log(nameArray)
+
+            for (let name of nameArray) {
+                console.log(name)
+                var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
+                var fullytrimmed = trimmedname.trim();
 
 
-            var featureList = new Array;
+                var featureList = new Array;
 
-            var specificSource = new ol.source.Vector({})
+                var specificSource = new ol.source.Vector({})
 
-            features = generalLayer.getSource().getFeatures();
-            for (var i = 0; i < features.length; i++) {
-                if (features[i].getProperties().name == trimmedname) {
-                    featureList.push(features[i])
-                    specificSource.addFeature(features[i])
-                    //console.log(features[i])
-                    map.removeLayer(generalLayer)
-                    //console.log(featureList)
-                    break;
+                features = generalLayer.getSource().getFeatures();
+                for (var i = 0; i < features.length; i++) {
+                    if (features[i].getProperties().name == trimmedname) {
+                        featureList.push(features[i])
+                        specificSource.addFeature(features[i])
+                        //console.log(features[i])
+                        map.removeLayer(generalLayer)
+                        //console.log(featureList)
+                        break;
+                    }
+
                 }
 
-            }
 
 
 
-
-            var specificLayer = new ol.layer.Vector({
-                source: specificSource,
-                style: [
-                    new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'black',
-                            width: 1
-                        }),
-                        fill: new ol.style.Fill({
-                            color: [0, 255, 255, 0.5]
+                var specificLayer = new ol.layer.Vector({
+                    source: specificSource,
+                    style: [
+                        new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'black',
+                                width: 1
+                            }),
+                            fill: new ol.style.Fill({
+                                color: userColour
+                            })
                         })
-                    })
-                ]
-            })
-            //console.log(specificSource.getFeatures())
-            map.addLayer(specificLayer)
+                    ]
+                })
+                //console.log(specificSource.getFeatures())
+                map.addLayer(specificLayer)
 
+            }
         }
-    }
 
-    function addingFeaturesToLayer() {
+        function addingSavedFeaturesToLayer() {
 
-        var names = document.getElementById('value').value;
-        var nameArray = names.split(", ");
+            var names = document.getElementById('dropdown');
+            var text = names.options[names.selectedIndex].text;
+            var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
+            var nameArray = string.split(", ");
+            console.log(nameArray);
+            for (let name of nameArray) {
+                var trimmedname = name.replace(/^[\n']+|[\n']+$/g, "");
+                var fullytrimmed = trimmedname.trim();
 
-        for (let name of nameArray) {
 
-            var featureList = new Array;
+                var featureList = new Array;
 
-            var specificSource = new ol.source.Vector({})
+                var specificSource = new ol.source.Vector({})
 
-            features = generalLayer.getSource().getFeatures();
-            for (var i = 0; i < features.length; i++) {
-                if (features[i].getProperties().name == name) {
-                    featureList.push(features[i])
-                    specificSource.addFeature(features[i])
-                    //console.log(features[i])
-                    map.removeLayer(generalLayer)
-                    //console.log(featureList)
-                    break;
+                features = generalLayer.getSource().getFeatures();
+                for (var i = 0; i < features.length; i++) {
+                    if (features[i].getProperties().name == trimmedname) {
+                        featureList.push(features[i])
+                        specificSource.addFeature(features[i])
+                        //console.log(features[i])
+                        map.removeLayer(generalLayer)
+                        //console.log(featureList)
+                        break;
+                    }
+
                 }
 
-            }
 
 
 
-
-            var specificLayer = new ol.layer.Vector({
-                source: specificSource,
-                style: [
-                    new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'black',
-                            width: 1
-                        }),
-                        fill: new ol.style.Fill({
-                            color: [0, 255, 255, 0.5]
+                var specificLayer = new ol.layer.Vector({
+                    source: specificSource,
+                    style: [
+                        new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'black',
+                                width: 1
+                            }),
+                            fill: new ol.style.Fill({
+                                color: [0, 255, 255, 0.5]
+                            })
                         })
-                    })
-                ]
-            })
-            //console.log(specificSource.getFeatures())
-            map.addLayer(specificLayer)
+                    ]
+                })
+                //console.log(specificSource.getFeatures())
+                map.addLayer(specificLayer)
 
+            }
         }
-    }
 
-    // function original() {
-    //     var OriginalEu = new ol.layer.Vector({
-    //         title: 'Polygon',
-    //         source: new ol.source.Vector({
-    //             projection: new ol.proj.get("EPSG:3857"),
-    //             url: 'http://localhost:8080/originalEU',
-    //             format: new ol.format.KML({
-    //                 extractStyles: false
-    //             })
-    //         }),
-    //         style: [
-    //             new ol.style.Style({
-    //                 stroke: new ol.style.Stroke({
-    //                     color: 'black',
-    //                     width: 1
-    //                 }),
-    //                 fill: new ol.style.Fill({
-    //                     color: [0, 255, 0, 0.5]
-    //                 })
-    //             })
-    //         ]
-    //     });
-    //     map.addLayer(OriginalEu)
-    //
-    //
-    //
-    //
-    //
-    // }
-    //
-    // function add() {
-    //     var AdditionEu = new ol.layer.Vector({
-    //         title: 'Polygon',
-    //         source: new ol.source.Vector({
-    //             projection: new ol.proj.get("EPSG:3857"),
-    //             url: 'http://localhost:8080/additionalEU',
-    //             format: new ol.format.KML({
-    //                 extractStyles: false
-    //             })
-    //         }),
-    //         style: [
-    //             new ol.style.Style({
-    //                 stroke: new ol.style.Stroke({
-    //                     color: 'black',
-    //                     width: 1
-    //                 }),
-    //                 fill: new ol.style.Fill({
-    //                     color: [0, 255, 255, 0.5]
-    //                 })
-    //             })
-    //         ]
-    //     });
-    //
-    //     map.addLayer(AdditionEu)
-    //
-    // }
-    //
-    // function add2() {
-    //     var AdditionEu = new ol.layer.Vector({
-    //         title: 'Polygon',
-    //         source: new ol.source.Vector({
-    //             projection: new ol.proj.get("EPSG:3857"),
-    //             url: 'http://localhost:8080/greecetoEU',
-    //             format: new ol.format.KML({
-    //                 extractStyles: false
-    //             })
-    //         }),
-    //         style: [
-    //             new ol.style.Style({
-    //                 stroke: new ol.style.Stroke({
-    //                     color: 'black',
-    //                     width: 1
-    //                 }),
-    //                 fill: new ol.style.Fill({
-    //                     color: [255, 0, 255, 0.5]
-    //                 })
-    //             })
-    //         ]
-    //     });
-    //
-    //     map.addLayer(AdditionEu)
-    //
-    // }
-    //
-    // function add1986() {
-    //     var AdditionEu = new ol.layer.Vector({
-    //         title: 'Polygon',
-    //         source: new ol.source.Vector({
-    //             projection: new ol.proj.get("EPSG:3857"),
-    //             url: 'http://localhost:8080/1986eu',
-    //             format: new ol.format.KML({
-    //                 extractStyles: false
-    //             })
-    //         }),
-    //         style: [
-    //             new ol.style.Style({
-    //                 stroke: new ol.style.Stroke({
-    //                     color: 'black',
-    //                     width: 1
-    //                 }),
-    //                 fill: new ol.style.Fill({
-    //                     color: [128, 0, 0, 0.5]
-    //                 })
-    //             })
-    //         ]
-    //     });
-    //
-    //     map.addLayer(AdditionEu)
-    //
-    // }
-    //
-    // function add1995() {
-    //     var AdditionEu = new ol.layer.Vector({
-    //         title: 'Polygon',
-    //         source: new ol.source.Vector({
-    //             projection: new ol.proj.get("EPSG:3857"),
-    //             url: 'http://localhost:8080/1995eu',
-    //             format: new ol.format.KML({
-    //                 extractStyles: false
-    //             })
-    //         }),
-    //         style: [
-    //             new ol.style.Style({
-    //                 stroke: new ol.style.Stroke({
-    //                     color: 'black',
-    //                     width: 1
-    //                 }),
-    //                 fill: new ol.style.Fill({
-    //                     color: [0, 128, 128, 0.5]
-    //                 })
-    //             })
-    //         ]
-    //     });
-    //
-    //     map.addLayer(AdditionEu)
-    //
-    // }
-    //
-    // function add2004() {
-    //     var AdditionEu = new ol.layer.Vector({
-    //         title: 'Polygon',
-    //         source: new ol.source.Vector({
-    //             projection: new ol.proj.get("EPSG:3857"),
-    //             url: 'http://localhost:8080/2004eu',
-    //             format: new ol.format.KML({
-    //                 extractStyles: false
-    //             })
-    //         }),
-    //         style: [
-    //             new ol.style.Style({
-    //                 stroke: new ol.style.Stroke({
-    //                     color: 'black',
-    //                     width: 1
-    //                 }),
-    //                 fill: new ol.style.Fill({
-    //                     color: [255, 255, 0, 0.5]
-    //                 })
-    //             })
-    //         ]
-    //     });
-    //
-    //     map.addLayer(AdditionEu)
-    //
-    // }
-    //
-    // function add2007() {
-    //     var AdditionEu = new ol.layer.Vector({
-    //         title: 'Polygon',
-    //         source: new ol.source.Vector({
-    //             projection: new ol.proj.get("EPSG:3857"),
-    //             url: 'http://localhost:8080/2007eu',
-    //             format: new ol.format.KML({
-    //                 extractStyles: false
-    //             })
-    //         }),
-    //         style: [
-    //             new ol.style.Style({
-    //                 stroke: new ol.style.Stroke({
-    //                     color: 'black',
-    //                     width: 1
-    //                 }),
-    //                 fill: new ol.style.Fill({
-    //                     color: [128, 128, 128, 0.5]
-    //                 })
-    //             })
-    //         ]
-    //     });
-    //
-    //     map.addLayer(AdditionEu)
-    //
-    // }
-    //
-    // function add2013() {
-    //     var AdditionEu = new ol.layer.Vector({
-    //         title: 'Polygon',
-    //         source: new ol.source.Vector({
-    //             projection: new ol.proj.get("EPSG:3857"),
-    //             url: 'http://localhost:8080/2013eu',
-    //             format: new ol.format.KML({
-    //                 extractStyles: false
-    //             })
-    //         }),
-    //         style: [
-    //             new ol.style.Style({
-    //                 stroke: new ol.style.Stroke({
-    //                     color: 'black',
-    //                     width: 1
-    //                 }),
-    //                 fill: new ol.style.Fill({
-    //                     color: [0, 0, 128, 0.5]
-    //                 })
-    //             })
-    //         ]
-    //     });
-    //
-    //     map.addLayer(AdditionEu)
-    //
-    // }
+        function addingFeaturesToLayer() {
 
-    function clearLayers() {
-        map.getLayers().removeAt(1);
-    }
-</script>
-  </head>
-  <body onload='init()'>
-<ul>
-  <li><a href="addbothtest">Add Map</a></li>
-  <li><a href="addlayer">Add Layer</a></li>
-  <li><a href="editmap">Edit Maps</a></li>
-  <li><a href="editlayer">Edit Layers</a></li>
-</ul>
+            var names = document.getElementById('value').value;
+            var nameArray = names.split(", ");
+
+            for (let name of nameArray) {
+
+                var featureList = new Array;
+
+                var specificSource = new ol.source.Vector({})
+
+                features = generalLayer.getSource().getFeatures();
+                for (var i = 0; i < features.length; i++) {
+                    if (features[i].getProperties().name == name) {
+                        featureList.push(features[i])
+                        specificSource.addFeature(features[i])
+                        //console.log(features[i])
+                        map.removeLayer(generalLayer)
+                        //console.log(featureList)
+                        break;
+                    }
+
+                }
 
 
+
+
+                var specificLayer = new ol.layer.Vector({
+                    source: specificSource,
+                    style: [
+                        new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'black',
+                                width: 1
+                            }),
+                            fill: new ol.style.Fill({
+                                color: [0, 255, 255, 0.5]
+                            })
+                        })
+                    ]
+                })
+                //console.log(specificSource.getFeatures())
+                map.addLayer(specificLayer)
+
+            }
+        }
+
+        function clearLayers() {
+            map.getLayers().removeAt(1);
+        }
+    </script>
+</head>
+<header>
+    <ul>
+        <li><a href="../world/">Home</a></li>
+        <li><a href="addmap">Add Map</a></li>
+        <li><a href="addlayer">Add Layer</a></li>
+        <li><a href="showmaps">Edit Maps</a></li>
+        <li><a href="editlayer">Edit Layers</a></li>
+    </ul>
+</header>
+
+<body onload='init()'>
     <div class="container">
 
 
-    <div id = "left" class="buttons">
+        <div id="left" class="buttons">
 
-        <form id='addFeatureForm'>
-            <input type="text" name="addFeatureValue" id='value' />
-            <input type="button" value="submit" onclick="addingFeaturesToLayer()" />
-        </form>
+            <form id='addFeatureForm'>
+                <input type="text" name="addFeatureValue" id='value' />
+                <input type="button" value="submit" onclick="addingFeaturesToLayer()" />
+            </form>
 
-    <input type="button" value="Clear" onclick="clearLayers()">
+            <input type="button" value="Clear" onclick="clearLayers()">
 
-        <select id="dropdown">
+            <select id="dropdown">
           {% for entry in userLayers %}
           <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
           {% endfor %}
           <input type="button"  value="submit" onclick="addingSavedFeaturesToLayer()" />
     </select>
 
-    <form action = "" method = "get" accept-charset = "utf-8" >
-    <select name = "map" id = "map" >
+            <form action="" method="get" accept-charset="utf-8">
+                <select name="map" id="map">
     <option value = "Z"> select a Map </option >
     {% for entry in usermaps %}
     <option value = "{{entry.mapname}}" > {{entry.mapname}} </option >
     {% endfor%}
     </select>
-    <select name = "layer" id = "layer" disabled = "true" width=10% max-width=90>
+                <select name="layer" id="layer" disabled="true" width=10% max-width=90>
     <option> select a layer </option>
     </select>
-    </form>
-    </div>
-    <div id="mapcontainer" class="mapcontainer"></div>
-    <div class="clear"></div>
+            </form>
+        </div>
+        <div id="mapcontainer" class="mapcontainer"></div>
+        <div class="clear"></div>
 
-</div>
+    </div>
 
 
 </body>
+
+
 </select>
+<footer> </footer>
+
 </html>

@@ -1,31 +1,30 @@
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, get_object_or_404
-from django.shortcuts import render, redirect
-import json
+from django.shortcuts import render_to_response, get_object_or_404, render, redirect
 from django.contrib.gis.shortcuts import render_to_kml
 from django.core.serializers import serialize
-from .models import WorldBorder
-from .models import CountryLists
-from .models import UserMaps
 from world.forms import CountryForm, UserMapForm, MapFormSet
+from .models import WorldBorder, CountryLists, UserMaps
+import json
 
+# home page of site, main functionality and map on this page
 def index(request):
-    query = WorldBorder.objects.values_list('name', flat=True)
+    query = WorldBorder.objects.values_list('name', flat=True) # creates queryset of all world border objects
     querylist = list(query)
-    json_data = json.dumps(querylist)
-    allayers = CountryLists.objects.all()
-    allmaps = UserMaps.objects.all()
+    json_data = json.dumps(querylist) # casts to json data for use in javascript
+    allayers = CountryLists.objects.all() # creates queryset of all user defined layers
+    allmaps = UserMaps.objects.all() # creates queryset of all user defined maps
     return render(request, 'world/index.html', {"names": json_data, "userLayers": allayers, "borders" : WorldBorder.objects.all(), "usermaps" : allmaps})
 
+# casts map to json for populating a select with that map's layers
 def all_json_models (request, map):
-    current_map = UserMaps.objects.get(mapname=map)
+    current_map = UserMaps.objects.get(mapname=map) # gets map from url input
     models = CountryLists.objects.all().filter(relatedmap=current_map)
-    json_models = serialize("json",models)
-    return HttpResponse (json_models, content_type="application/javascript")
+    json_models = serialize("json",models) # serializes to json
+    return HttpResponse (json_models, content_type="application/javascript") #returns and is picked up by JS funcion
 
-def addbothtest(request):
+# form to create user defined maps with layers
+def addmap(request):
     if request.POST:
-
         form = UserMapForm(request.POST)
         if form.is_valid():
             usermap = form.save(commit=False)
@@ -37,8 +36,9 @@ def addbothtest(request):
     else:
         form = UserMapForm()
         map_formset = MapFormSet(instance=UserMaps(), prefix="nested")
-    return render(request, 'world/addbothtest.html', {'form' : form, "map_formset": map_formset})
+    return render(request, 'world/addmap.html', {'form' : form, "map_formset": map_formset})
 
+# adds a single layer
 def addlayer(request):
     print(request.method)
     if request.method == 'POST':  # if the form has been filled
@@ -58,16 +58,13 @@ def addlayer(request):
         form=CountryForm()
         return render(request, 'world/addlayer.html', {'form' :form})
 
-def originaleu(request):
-  polygons = WorldBorder.objects.kml().filter(name__in=['France','Belgium','Germany', 'Luxembourg', 'Italy', 'Netherlands'])
-  return render_to_kml("world/placemarks.kml", {'places': polygons})
 
-def editmap(request):
+def showmaps(request):
     allayers = CountryLists.objects.all()
     allmaps = UserMaps.objects.all()
-    return render(request, 'world/editmap.html', { "userLayers": allayers, "usermaps" : allmaps})
+    return render(request, 'world/showmaps.html', { "userLayers": allayers, "usermaps" : allmaps})
 
-def editspecificmap(request, map_name):
+def editmap(request, map_name):
 
     usermap = get_object_or_404(UserMaps, mapname=map_name)
     form = UserMapForm(instance=usermap)
@@ -81,45 +78,17 @@ def editspecificmap(request, map_name):
             if formset.is_valid():
                 updatedusermap.save()
                 formset.save()
-                return redirect('/world/editmap')
+                return redirect('/world/showmaps')
     else:
         form = UserMapForm(instance=usermap)
         formset = MapFormSet(instance=usermap,  prefix="nested")
-    return render(request, 'world/editspecificmap.html', {'form' : form, "map_formset": formset})
+    return render(request, 'world/editmap.html', {'form' : form, "map_formset": formset})
 
 
 def deletemap(request, map_name):
     todelete = get_object_or_404(UserMaps, mapname=map_name)
     todelete.delete()
     return redirect('/world')
-
-def additionaleu(request):
-    polygons2 = WorldBorder.objects.kml().filter(name__in=['United Kingdom','Denmark','Ireland','Gibraltar'])
-    return render_to_kml("world/placemarks.kml", {'places': polygons2})
-
-def greeceeu(request):
-    greecepolygon = WorldBorder.objects.kml().filter(name__in=['Greece'])
-    return render_to_kml("world/placemarks.kml", {'places' : greecepolygon})
-
-def eu1986(request):
-    eightysixpolygon = WorldBorder.objects.kml().filter(name__in=['Spain', 'Portugal'])
-    return render_to_kml("world/placemarks.kml", {'places' : eightysixpolygon})
-
-def eu1995(request):
-    ninetyfivepolygon = WorldBorder.objects.kml().filter(name__in=['Finland', 'Austria', 'Sweden'])
-    return render_to_kml("world/placemarks.kml", {'places' : ninetyfivepolygon})
-
-def eu2004(request):
-    zerofourpolygon = WorldBorder.objects.kml().filter(name__in=['Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic', 'Slovakia', 'Hungary', 'Cyprus'])
-    return render_to_kml("world/placemarks.kml", {'places' : zerofourpolygon})
-
-def eu2007(request):
-    zerosevenpolygon = WorldBorder.objects.kml().filter(name__in=['Romania', 'Bulgaria'])
-    return render_to_kml("world/placemarks.kml", {'places' : zerosevenpolygon})
-
-def eu2013(request):
-    thirteenpolygon = WorldBorder.objects.kml().filter(name__in=['Croatia'])
-    return render_to_kml("world/placemarks.kml", {'places' : thirteenpolygon})
 
 def allcountries(request):
     allcountries = WorldBorder.objects.kml()
