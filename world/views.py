@@ -67,6 +67,27 @@ def editmap(request):
     allmaps = UserMaps.objects.all()
     return render(request, 'world/editmap.html', { "userLayers": allayers, "usermaps" : allmaps})
 
+def editspecificmap(request, map_name):
+
+    usermap = get_object_or_404(UserMaps, mapname=map_name)
+    form = UserMapForm(instance=usermap)
+    formset = MapFormSet(instance=usermap,  prefix="nested")
+
+    if request.method == "POST":
+        form = UserMapForm(request.POST, instance=usermap)
+        if form.is_valid():
+            updatedusermap = form.save()
+            formset = MapFormSet(request.POST, instance=updatedusermap,  prefix="nested")
+            if formset.is_valid():
+                updatedusermap.save()
+                formset.save()
+                return redirect('/world/editmap')
+    else:
+        form = UserMapForm(instance=usermap)
+        formset = MapFormSet(instance=usermap,  prefix="nested")
+    return render(request, 'world/editspecificmap.html', {'form' : form, "map_formset": formset})
+
+
 def deletemap(request, map_name):
     todelete = get_object_or_404(UserMaps, mapname=map_name)
     todelete.delete()
