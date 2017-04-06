@@ -100,6 +100,21 @@
                 });
             });
 
+        $(document).ready(
+          function() {
+            $("select#layer").change(function() {
+              var url = "map/" + $('select#map').val() + "/all_json_models";
+              var map = $(this).val();
+              $.getJSON(url, function(layers) {
+                for (var i = 0; i < layers.length; i++) {
+                $("#infofield").val(layers[i].fields['info']);
+                $("#yearfield").val(layers[i].fields['year']);
+                console.log(layers[i].fields['info']);
+              }
+
+            })})});
+
+
         function addingSavedMapFeaturesToLayer() {
 
             var names = document.getElementById('layer');
@@ -257,6 +272,7 @@
         function clearLayers() {
             map.getLayers().removeAt(1);
         }
+
     </script>
 </head>
 <header>
@@ -299,8 +315,11 @@
                 <select name="layer" id="layer" disabled="true" width=10% max-width=90>
     <option> select a layer </option>
     </select>
+    <input type="text" id="infofield" value="">
+    <input type="text" id="yearfield" value="">
             </form>
         </div>
+
         <div id="mapcontainer" class="mapcontainer"></div>
         <div class="clear"></div>
 
