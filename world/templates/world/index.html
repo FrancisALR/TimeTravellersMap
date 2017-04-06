@@ -18,7 +18,7 @@
 
         var sourceF = new ol.source.Vector({
             projection: new ol.proj.get("EPSG:3857"),
-            url: 'http://localhost:8080/world/allcountries',
+            url: 'http://localhost:8080/world/all_countries',
             format: new ol.format.KML({
                 extractStyles: false
             })
@@ -56,7 +56,7 @@
 
             var sourceF = new ol.source.Vector({
                 projection: new ol.proj.get("EPSG:3857"),
-                url: 'http://localhost:8080/allcountries',
+                url: 'http://localhost:8080/all_countries',
                 format: new ol.format.KML({
                     extractStyles: false
                 })
@@ -262,9 +262,9 @@
 <header>
     <ul>
         <li><a href="../world/">Home</a></li>
-        <li><a href="addmap">Add Map</a></li>
-        <li><a href="addlayer">Add Layer</a></li>
-        <li><a href="showmaps">Edit Maps</a></li>
+        <li><a href="add_map">Add Map</a></li>
+        <li><a href="add_layer">Add Layer</a></li>
+        <li><a href="show_maps">Edit Maps</a></li>
         <li><a href="editlayer">Edit Layers</a></li>
     </ul>
 </header>
@@ -283,7 +283,7 @@
             <input type="button" value="Clear" onclick="clearLayers()">
 
             <select id="dropdown">
-          {% for entry in userLayers %}
+          {% for entry in user_layers %}
           <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
           {% endfor %}
           <input type="button"  value="submit" onclick="addingSavedFeaturesToLayer()" />
@@ -292,7 +292,7 @@
             <form action="" method="get" accept-charset="utf-8">
                 <select name="map" id="map">
     <option value = "Z"> select a Map </option >
-    {% for entry in usermaps %}
+    {% for entry in user_maps %}
     <option value = "{{entry.mapname}}" > {{entry.mapname}} </option >
     {% endfor%}
     </select>

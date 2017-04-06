@@ -9,11 +9,11 @@ import json
 # home page of site, main functionality and map on this page
 def index(request):
     query = WorldBorder.objects.values_list('name', flat=True) # creates queryset of all world border objects
-    querylist = list(query)
-    json_data = json.dumps(querylist) # casts to json data for use in javascript
-    allayers = CountryLists.objects.all() # creates queryset of all user defined layers
-    allmaps = UserMaps.objects.all() # creates queryset of all user defined maps
-    return render(request, 'world/index.html', {"names": json_data, "userLayers": allayers, "borders" : WorldBorder.objects.all(), "usermaps" : allmaps})
+    query_list = list(query)
+    json_data = json.dumps(query_list) # casts to json data for use in javascript
+    all_layers = CountryLists.objects.all() # creates queryset of all user defined layers
+    all_maps = UserMaps.objects.all() # creates queryset of all user defined maps
+    return render(request, 'world/index.html', {"names": json_data, "user_layers": all_layers, "borders" : WorldBorder.objects.all(), "user_maps" : all_maps})
 
 # casts map to json for populating a select with that map's layers
 def all_json_models (request, map):
@@ -23,7 +23,7 @@ def all_json_models (request, map):
     return HttpResponse (json_models, content_type="application/javascript") #returns and is picked up by JS funcion
 
 # form to create user defined maps with layers
-def addmap(request):
+def add_map(request):
     if request.POST:
         form = UserMapForm(request.POST)
         if form.is_valid():
@@ -36,10 +36,10 @@ def addmap(request):
     else:
         form = UserMapForm()
         map_formset = MapFormSet(instance=UserMaps(), prefix="nested")
-    return render(request, 'world/addmap.html', {'form' : form, "map_formset": map_formset})
+    return render(request, 'world/add_map.html', {'form' : form, "map_formset": map_formset})
 
 # adds a single layer
-def addlayer(request):
+def add_layer(request):
     print(request.method)
     if request.method == 'POST':  # if the form has been filled
 
@@ -56,40 +56,40 @@ def addlayer(request):
             return redirect('/world')
     else:
         form=CountryForm()
-        return render(request, 'world/addlayer.html', {'form' :form})
+        return render(request, 'world/add_layer.html', {'form' :form})
 
 
-def showmaps(request):
-    allayers = CountryLists.objects.all()
-    allmaps = UserMaps.objects.all()
-    return render(request, 'world/showmaps.html', { "userLayers": allayers, "usermaps" : allmaps})
+def show_maps(request):
+    all_layers = CountryLists.objects.all()
+    all_maps = UserMaps.objects.all()
+    return render(request, 'world/show_maps.html', { "user_layers": all_layers, "user_maps" : all_maps})
 
-def editmap(request, map_name):
+def edit_map(request, map_name):
 
-    usermap = get_object_or_404(UserMaps, mapname=map_name)
-    form = UserMapForm(instance=usermap)
-    formset = MapFormSet(instance=usermap,  prefix="nested")
+    user_map = get_object_or_404(UserMaps, mapname=map_name)
+    form = UserMapForm(instance=user_map)
+    formset = MapFormSet(instance=user_map,  prefix="nested")
 
     if request.method == "POST":
-        form = UserMapForm(request.POST, instance=usermap)
+        form = UserMapForm(request.POST, instance=user_map)
         if form.is_valid():
-            updatedusermap = form.save()
-            formset = MapFormSet(request.POST, instance=updatedusermap,  prefix="nested")
+            updated_user_map = form.save()
+            formset = MapFormSet(request.POST, instance=updated_user_map,  prefix="nested")
             if formset.is_valid():
-                updatedusermap.save()
+                updated_user_map.save()
                 formset.save()
-                return redirect('/world/showmaps')
+                return redirect('/world/show_maps')
     else:
-        form = UserMapForm(instance=usermap)
-        formset = MapFormSet(instance=usermap,  prefix="nested")
-    return render(request, 'world/editmap.html', {'form' : form, "map_formset": formset})
+        form = UserMapForm(instance=user_map)
+        formset = MapFormSet(instance=user_map,  prefix="nested")
+    return render(request, 'world/edit_map.html', {'form' : form, "map_formset": formset})
 
 
-def deletemap(request, map_name):
-    todelete = get_object_or_404(UserMaps, mapname=map_name)
-    todelete.delete()
+def delete_map(request, map_name):
+    to_delete = get_object_or_404(UserMaps, mapname=map_name)
+    to_delete.delete()
     return redirect('/world')
 
-def allcountries(request):
-    allcountries = WorldBorder.objects.kml()
-    return render_to_kml("world/placemarks.kml", {'places' : allcountries})
+def all_countries(request):
+    all_countries = WorldBorder.objects.kml()
+    return render_to_kml("world/placemarks.kml", {'places' : all_countries})

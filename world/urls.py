@@ -6,11 +6,11 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^admin/', admin.site.urls),
-    url(r'^allcountries', views.allcountries),
-    url(r'^addlayer$', views.addlayer),
-    url(r'^addmap$', views.addmap),
+    url(r'^all_countries', views.all_countries),
+    url(r'^add_layer$', views.add_layer),
+    url(r'^add_map$', views.add_map),
     url(r'^map/(?P<map>[\w|\W]+)/all_json_models/$', views.all_json_models),
-    url(r'^deletemap/(?P<map_name>.*)$', views.deletemap),
-    url(r'^showmaps', views.showmaps),
-    url(r'^editmap/(?P<map_name>.*)', views.editmap)
+    url(r'^delete_map/(?P<map_name>.*)$', views.delete_map),
+    url(r'^show_maps', views.show_maps),
+    url(r'^edit_map/(?P<map_name>.*)', views.edit_map)
 ]

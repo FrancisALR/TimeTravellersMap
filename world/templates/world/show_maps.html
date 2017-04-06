@@ -16,9 +16,9 @@
 <header>
     <ul>
         <li><a href="../world/">Home</a></li>
-        <li><a href="../world/addmap">Add Map</a></li>
-        <li><a href="../world/addlayer">Add Layer</a></li>
-        <li><a href="../world/showmaps">Edit Maps</a></li>
+        <li><a href="../world/add_map">Add Map</a></li>
+        <li><a href="../world/add_layer">Add Layer</a></li>
+        <li><a href="../world/show_maps">Edit Maps</a></li>
         <li><a href="../world/editlayer">Edit Layers</a></li>
     </ul>
 </header>
@@ -31,11 +31,11 @@
                 <th>Delete</th>
                 <th>Edit</th>
             </tr>
-            {% for entry in usermaps %}
+            {% for entry in user_maps %}
             <tr>
                 <td> {{ entry.mapname }}</th>
-                    <td><a href="/world/deletemap/{{entry.mapname}}">Delete</a></th>
-                        <td><a href="/world/editmap/{{entry.mapname}}">Edit</a></th>
+                    <td><a href="/world/delete_map/{{entry.mapname}}">Delete</a></th>
+                        <td><a href="/world/edit_map/{{entry.mapname}}">Edit</a></th>
                             {% endfor%}
         </table>
 
