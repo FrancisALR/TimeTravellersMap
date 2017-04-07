@@ -62,7 +62,8 @@ def add_layer(request):
 def show_maps(request):
     all_layers = CountryLists.objects.all()
     all_maps = UserMaps.objects.all()
-    return render(request, 'world/show_maps.html', { "user_layers": all_layers, "user_maps" : all_maps})
+    ordered_maps = all_maps.order_by('mapname')
+    return render(request, 'world/show_maps.html', { "user_layers": all_layers, "user_maps" : ordered_maps})
 
 def edit_map(request, map_name):
 
