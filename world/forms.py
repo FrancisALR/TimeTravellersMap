@@ -8,6 +8,11 @@ class CountryForm(forms.Form):
     listofcountries = forms.CharField(label='Add list of countries', max_length= 200)
     year = forms.IntegerField(label='Add year here')
 
+class CountryEditForm(forms.ModelForm):
+    class Meta:
+        model = CountryLists
+        fields = ('layername', 'countrylist', 'year', 'info', 'layercolour')
+
 class UserMapForm(ModelForm):
     class Meta:
         model = UserMaps

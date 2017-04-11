@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404, render, redirect
 from django.contrib.gis.shortcuts import render_to_kml
 from django.core.serializers import serialize
-from world.forms import CountryForm, UserMapForm, MapFormSet
+from world.forms import CountryForm, UserMapForm, MapFormSet, CountryEditForm
 from .models import WorldBorder, CountryLists, UserMaps
 import json
 
@@ -85,6 +85,21 @@ def edit_map(request, map_name):
         formset = MapFormSet(instance=user_map,  prefix="nested")
     return render(request, 'world/edit_map.html', {'form' : form, "map_formset": formset})
 
+def edit_layer(request,layer_name):
+    user_layer = get_object_or_404(CountryLists, layername=layer_name)
+    form = CountryEditForm(instance=user_layer)
+    if request.method == "POST":
+        form = CountryEditForm(request.POST, instance=user_layer)
+        if form.is_valid():
+            form.save()
+            return redirect('world/show_layers')
+    else:
+        form = CountryEditForm(instance=user_layer)
+    return render(request, 'world/edit_layer.html', {'form' : form})
+
+def show_layers(request):
+    all_layers = CountryLists.objects.all()
+    return render(request, 'world/show_layers.html', { "user_layers": all_layers})
 
 def delete_map(request, map_name):
     to_delete = get_object_or_404(UserMaps, mapname=map_name)

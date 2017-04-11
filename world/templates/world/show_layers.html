@@ -31,11 +31,10 @@
                 <th>Delete</th>
                 <th>Edit</th>
             </tr>
-            {% for entry in user_maps %}
+            {% for entry in user_layers %}
             <tr>
-                <td> {{ entry.mapname }}</th>
-                    <td><a href="/world/delete_map/{{entry.mapname}}">Delete</a></th>
-                        <td><a href="/world/edit_map/{{entry.mapname}}">Edit</a></th>
+                <td> {{ entry.layername }}</th>
+                        <td><a href="/world/edit_layer/{{entry.layername}}">Edit</a></th>
                             {% endfor%}
         </table>
     </div>
