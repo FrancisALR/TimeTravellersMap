@@ -33,7 +33,7 @@
                 <input type="text" name="addFeatureValue" id='value' />
                 <input type="button" value="submit" onclick="addingFeaturesToLayer()" />
             </form>
-            <input type="button" value="Clear" onclick="clearLayers()">
+
             <select id="dropdown">
           {% for entry in user_layers %}
           <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
@@ -54,7 +54,7 @@
     <input type="text" id="yearfield" value="">
   </form>
 </form>
-  <input type="button" value="Clear form" id="clearform" onclick="clearform()">
+  <input type="button" value="Clear Layers/Form" id="clearform">
         </div>
         <div id="mapcontainer" class="mapcontainer"></div>
         <div id="info">&nbsp;</div>

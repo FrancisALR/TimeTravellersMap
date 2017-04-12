@@ -262,10 +262,6 @@ function addingFeaturesToLayer() {
     }
 }
 
-function clearLayers() {
-    map.getLayers().removeAt(1);
-}
-
 $(document).ready(
     function() {
         $("select#map").change(function() {
@@ -308,14 +304,9 @@ $(document).ready(
       }
 
     })})});
-
-function clearform() {
-  document.getElementById("mapsform").reset();
-  var layers = map.getLayers().getArray();
-  for (layer in layers)
-    clearmap(layer);
-}
-
-function clearmap(layer) {
+$(document).ready(function() {
+$( "#clearform" ).click(function() {
+  for (layer in map.getLayers()) {
   map.getLayers().removeAt(1);
 }
+})});
