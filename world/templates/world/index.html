@@ -14,6 +14,11 @@
 
     <script type=text/javascript src = "{% static "world/main.js" %}"></script>
 
+<style>
+.my-select {
+  visibility: hidden;
+}
+</style>
 </head>
 <header>
     <ul>
@@ -31,35 +36,39 @@
           <form id='fullform'>
             <form id='addFeatureForm'>
                 <input type="text" name="addFeatureValue" id='value' />
-                <input type="button" value="submit" onclick="addingFeaturesToLayer()" />
+                <input type="button" value="Submit" onclick="addingFeaturesToLayer()" />
             </form>
 
             <select id="dropdown">
+              <option> Select a Layer </option>
           {% for entry in user_layers %}
           <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
           {% endfor %}
-          <input type="button"  value="submit" onclick="addingSavedFeaturesToLayer()" />
+          <input type="button"  value="Submit" onclick="addingSavedFeaturesToLayer()" />
     </select>
             <form action="" method="get" accept-charset="utf-8" id="mapsform">
                 <select name="map" id="map">
-    <option value = "Z"> select a Map </option >
+    <option value = "Z"> Select a Map </option >
     {% for entry in user_maps %}
     <option value = "{{entry.mapname}}" > {{entry.mapname}} </option >
     {% endfor%}
     </select>
-    <select name="layer" id="layer" disabled="true" width=10% max-width=90>
-      <option> select a layer </option>
+    <select class="my-select" name="layer" id="layer" disabled="true" width=10% max-width=90, data-default="defaultSelected">
+    <option value="defaultSelected"> Select a layer </option>
     </select>
     <input type="text" id="infofield" value="" readonly="">
     <input type="text" id="yearfield" value="" readonly="">
   </form>
 </form>
-  <input type="button" value="Clear Layers/Form" id="clearform">
+  <input type="button" value="Clear" id="clearform">
+    <input type="button" value="Previous" id="fieldPrevious">   <input type="button" value="Next" id="fieldNext">
+
         </div>
         <div id="mapcontainer" class="mapcontainer"></div>
         <div id="info"></div>
         <div class="clear"></div>
         <div id="onclickinfo"></div>
+
 
     </div>
 </body>

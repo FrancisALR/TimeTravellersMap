@@ -15,9 +15,6 @@ var generalLayer = new ol.layer.Vector({
 function init() {
   console.log('initialized')
 
-  // select interaction working on "click"
-
-
   var dragAndDropInteraction = new ol.interaction.DragAndDrop({
         formatConstructors: [
           ol.format.GPX,
@@ -117,6 +114,11 @@ function init() {
                 document.getElementById('onclickinfo').innerHTML = '&nbsp;'
               });
 
+              window.app = {};
+      var app = window.app;
+
+
+
 
 }
 
@@ -152,9 +154,6 @@ function addingSavedMapFeaturesToLayer() {
 
         }
 
-
-
-
         var specificLayer = new ol.layer.Vector({
             source: specificSource,
             style: [
@@ -169,8 +168,10 @@ function addingSavedMapFeaturesToLayer() {
                 })
             ]
         })
+
         //console.log(specificSource.getFeatures())
-        map.addLayer(specificLayer)
+        map.addLayer(specificLayer);
+        specificLayer.setOpacity(0.5);
 
     }
 }
@@ -294,37 +295,55 @@ $(document).ready(
                 });
             }
         });
-        $("select#layer").change(function(vent) {
-            console.log('entered')
-            addingSavedMapFeaturesToLayer();
-            if ($(this).val() == -1) {
-                return;
-            }
-        });
     });
 
 $(document).ready(
   function() {
     $("select#layer").change(function() {
+      addingSavedMapFeaturesToLayer();
       var url = "map/" + $('select#map').val() + "/all_json_models";
       var map = $(this).val();
       var selectedLayer = $(this).children(":selected").attr("id");
       $.getJSON(url, function(layers) {
         for (var i = 0; i < layers.length; i++) {
           if (selectedLayer == layers[i].fields['layername']) {
-          $("#infofield").val(layers[i].fields['info']);
-          $("#yearfield").val(layers[i].fields['year']);
+            $("#infofield").val(layers[i].fields['info']);
+            $("#yearfield").val(layers[i].fields['year']);
         }
       }
 
     })})});
+
 $(document).ready(function() {
 $( "#clearform" ).click(function() {
   document.getElementById("mapsform").reset();
+  $('select#layer option').prop('selectedIndex', 0)
   for (layer in map.getLayers()) {
     if (map.getLayers().getArray().length > 1) {
-      console.log(map.getLayers().getArray().length);
       map.getLayers().removeAt(1);
   }
 }
 })});
+
+$(function(){
+  $('#fieldNext').on('click', function(){
+    var selected_element = $('select#layer option:selected');
+    selected_element.removeAttr('selected');
+    selected_element.next().attr('selected', 'selected');
+    $('select#layer').val(selected_element.next().val());
+    $("select#layer").trigger('change');
+
+
+  });
+});
+
+$(function(){
+  $('#fieldPrevious').on('click', function(){
+    var selected_element = $('select#layer option:selected');
+    selected_element.removeAttr('selected');
+    selected_element.prev().attr('selected', 'selected');
+    $('select#layer').val(selected_element.prev().val());
+    $("select#layer").trigger('change');
+
+  });
+});
