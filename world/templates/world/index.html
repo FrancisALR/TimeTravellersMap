@@ -47,21 +47,21 @@
     <option value = "{{entry.mapname}}" > {{entry.mapname}} </option >
     {% endfor%}
     </select>
-                <select name="layer" id="layer" disabled="true" width=10% max-width=90>
-    <option> select a layer </option>
+    <select name="layer" id="layer" disabled="true" width=10% max-width=90>
+      <option> select a layer </option>
     </select>
-    <input type="text" id="infofield" value="">
-    <input type="text" id="yearfield" value="">
+    <input type="text" id="infofield" value="" readonly="">
+    <input type="text" id="yearfield" value="" readonly="">
   </form>
 </form>
   <input type="button" value="Clear Layers/Form" id="clearform">
         </div>
         <div id="mapcontainer" class="mapcontainer"></div>
-        <div id="info">&nbsp;</div>
+        <div id="info"></div>
         <div class="clear"></div>
+        <div id="onclickinfo"></div>
 
     </div>
 </body>
 </select>
-<footer> </footer>
 </html>

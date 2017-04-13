@@ -15,6 +15,9 @@ var generalLayer = new ol.layer.Vector({
 function init() {
   console.log('initialized')
 
+  // select interaction working on "click"
+
+
   var dragAndDropInteraction = new ol.interaction.DragAndDrop({
         formatConstructors: [
           ol.format.GPX,
@@ -105,6 +108,15 @@ function init() {
             displayFeatureInfo(evt.pixel);
           });
 
+          var select = new ol.interaction.Select({
+            condition: ol.events.condition.click
+          });
+
+          map.addInteraction(select);
+              select.on('select', function(e) {
+                document.getElementById('onclickinfo').innerHTML = '&nbsp;'
+              });
+
 
 }
 
@@ -115,10 +127,10 @@ function addingSavedMapFeaturesToLayer() {
     var text = names.options[names.selectedIndex].text;
     var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
     var nameArray = string.split(", ");
-    console.log(nameArray)
+    //console.log(nameArray)
 
     for (let name of nameArray) {
-        console.log(name)
+        //console.log(name)
         var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
         var fullytrimmed = trimmedname.trim();
 
@@ -169,7 +181,7 @@ function addingSavedFeaturesToLayer() {
     var text = names.options[names.selectedIndex].text;
     var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
     var nameArray = string.split(", ");
-    console.log(nameArray);
+    //console.log(nameArray);
     for (let name of nameArray) {
         var trimmedname = name.replace(/^[\n']+|[\n']+$/g, "");
         var fullytrimmed = trimmedname.trim();
@@ -274,7 +286,7 @@ $(document).ready(
                 $.getJSON(url, function(layers) {
                     var options = '<option value="Z">Select a layer</option>';
                     for (var i = 0; i < layers.length; i++) {
-                        options += '<option value="' + layers[i].fields['layercolour'] + '">' + layers[i].fields['countrylist'] + layers[i].fields['year'] + layers[i].fields['layercolour'] + '</option>';
+                        options += '<option value="' + layers[i].fields['layercolour'] + '" id=' + layers[i].fields['layername'] + '>' + layers[i].fields['countrylist'] + " : " + layers[i].fields['year'] + '</option>';
                     }
                     $("select#layer").html(options);
                     $("select#layer option:first").attr('selected', 'selected');
@@ -296,16 +308,22 @@ $(document).ready(
     $("select#layer").change(function() {
       var url = "map/" + $('select#map').val() + "/all_json_models";
       var map = $(this).val();
+      var selectedLayer = $(this).children(":selected").attr("id");
       $.getJSON(url, function(layers) {
         for (var i = 0; i < layers.length; i++) {
-        $("#infofield").val(layers[i].fields['info']);
-        $("#yearfield").val(layers[i].fields['year']);
-        console.log(layers[i].fields['info']);
+          if (selectedLayer == layers[i].fields['layername']) {
+          console.log(layers);
+
+          $("#infofield").val(layers[i].fields['info']);
+          $("#yearfield").val(layers[i].fields['year']);
+          //console.log(layers[i].fields['info']);
+        }
       }
 
     })})});
 $(document).ready(function() {
 $( "#clearform" ).click(function() {
+  document.getElementById("mapsform").reset();
   for (layer in map.getLayers()) {
   map.getLayers().removeAt(1);
 }
