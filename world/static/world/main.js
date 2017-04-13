@@ -312,11 +312,8 @@ $(document).ready(
       $.getJSON(url, function(layers) {
         for (var i = 0; i < layers.length; i++) {
           if (selectedLayer == layers[i].fields['layername']) {
-          console.log(layers);
-
           $("#infofield").val(layers[i].fields['info']);
           $("#yearfield").val(layers[i].fields['year']);
-          //console.log(layers[i].fields['info']);
         }
       }
 
@@ -325,6 +322,9 @@ $(document).ready(function() {
 $( "#clearform" ).click(function() {
   document.getElementById("mapsform").reset();
   for (layer in map.getLayers()) {
-  map.getLayers().removeAt(1);
+    if (map.getLayers().getArray().length > 1) {
+      console.log(map.getLayers().getArray().length);
+      map.getLayers().removeAt(1);
+  }
 }
 })});
