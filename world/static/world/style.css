@@ -87,3 +87,7 @@ padding: 1em;
 .clear {
   clear: both;
 }
+
+#infofield {
+  height: 150px;
+}

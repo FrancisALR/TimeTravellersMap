@@ -56,8 +56,8 @@
     <select class="my-select" name="layer" id="layer" disabled="true" width=10% max-width=90, data-default="defaultSelected">
     <option value="defaultSelected"> Select a layer </option>
     </select>
-    <input type="text" id="infofield" value="" readonly="">
-    <input type="text" id="yearfield" value="" readonly="">
+    <textarea id="infofield" value="" readonly=""></textarea>
+    <textarea id="yearfield" value="" readonly=""></textarea>
   </form>
 </form>
   <input type="button" value="Clear" id="clearform">
@@ -71,6 +71,8 @@
 
 
     </div>
+
+    <input type="button" value="View KML" onclick="getKMLfromCurrentMap()">
 </body>
 </select>
 </html>

@@ -19,7 +19,8 @@ def index(request):
 def all_json_models (request, map):
     current_map = UserMaps.objects.get(mapname=map) # gets map from url input
     models = CountryLists.objects.all().filter(relatedmap=current_map)
-    json_models = serialize("json",models) # serializes to json
+    ordered = models.order_by('year')
+    json_models = serialize("json",ordered) # serializes to json
     return HttpResponse (json_models, content_type="application/javascript") #returns and is picked up by JS funcion
 
 # form to create user defined maps with layers

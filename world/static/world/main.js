@@ -148,7 +148,7 @@ function addingSavedMapFeaturesToLayer() {
                 specificSource.addFeature(features[i])
                 //console.log(features[i])
                 map.removeLayer(generalLayer)
-                //console.log(featureList)
+
                 break;
             }
 
@@ -197,10 +197,10 @@ function addingSavedFeaturesToLayer() {
             if (features[i].getProperties().name == trimmedname) {
                 featureList.push(features[i])
                 specificSource.addFeature(features[i])
+
                 //console.log(features[i])
                 map.removeLayer(generalLayer)
                 //console.log(featureList)
-                break;
             }
 
         }
@@ -222,8 +222,8 @@ function addingSavedFeaturesToLayer() {
                 })
             ]
         })
-        //console.log(specificSource.getFeatures())
-        map.addLayer(specificLayer)
+        console.log(specificSource.getFeatures());
+        map.addLayer(specificLayer);
 
     }
 }
@@ -325,13 +325,22 @@ $( "#clearform" ).click(function() {
 }
 })});
 
+function clearMapOnly() {
+  for (layer in map.getLayers()) {
+    if (map.getLayers().getArray().length > 1) {
+      map.getLayers().removeAt(1);
+    }}
+}
+
 $(function(){
   $('#fieldNext').on('click', function(){
-    var selected_element = $('select#layer option:selected');
-    selected_element.removeAttr('selected');
-    selected_element.next().attr('selected', 'selected');
-    $('select#layer').val(selected_element.next().val());
-    $("select#layer").trigger('change');
+    if ($('select#layer').find(":selected").index() <= $('select#layer').length) {
+      var selected_element = $('select#layer option:selected');
+      selected_element.removeAttr('selected');
+      selected_element.next().attr('selected', 'selected');
+      $('select#layer').val(selected_element.next().val());
+      $("select#layer").trigger('change');
+}
 
 
   });
@@ -339,11 +348,38 @@ $(function(){
 
 $(function(){
   $('#fieldPrevious').on('click', function(){
-    var selected_element = $('select#layer option:selected');
-    selected_element.removeAttr('selected');
-    selected_element.prev().attr('selected', 'selected');
-    $('select#layer').val(selected_element.prev().val());
-    $("select#layer").trigger('change');
+      if ($('select#layer').find(":selected").index() != 0) {
+        var selected_element = $('select#layer option:selected');
+        selected_element.removeAttr('selected');
+        selected_element.prev().attr('selected', 'selected');
+        $('select#layer').val(selected_element.prev().val());
+        $("select#layer").trigger('change');
+        clearMapOnly();
+}
 
   });
 });
+
+function getKMLfromCurrentMap() {
+    specificLayer = map.getLayers().getArray();
+    specificLayer.splice(0, 1);
+    console.log(specificLayer)
+
+    var featureList = new Array;
+    var specificSource = new ol.source.Vector({})
+
+    for (var i = 0; i < map.getLayers().getArray().length; i++) {
+        features = specificLayer[i].getSource().getFeatures();
+        console.log(features[0]);
+        specificSource.addFeature(features[0]);
+        console.log(features[i])
+
+
+    }
+    var kmlString = new ol.format.KML({})
+
+    var kmloutput = kmlString.writeFeatures(specificSource.getFeatures());
+
+    var wnd = window.open("about:blank", "", "_blank");
+    wnd.document.write(kmloutput);
+}
