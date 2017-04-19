@@ -91,3 +91,8 @@ padding: 1em;
 #infofield {
   height: 150px;
 }
+
+#fieldNext {
+  background-image: url(images/fwd.png);
+  height: 32px;
+}

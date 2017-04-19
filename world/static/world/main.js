@@ -1,5 +1,6 @@
-var js_list = "{{names|escapejs}}"
-console.log(js_list)
+var jsList = "{{names|escapejs}}";
+
+var stamen;
 
 var sourceF = new ol.source.Vector({
     projection: new ol.proj.get("EPSG:3857"),
@@ -43,7 +44,7 @@ function init() {
         })
     });
 
-    var stamen = new ol.layer.Tile({
+    stamen = new ol.layer.Tile({
         source: new ol.source.Stamen({
             layer: 'toner-lite'
         })
@@ -174,6 +175,7 @@ function addingSavedMapFeaturesToLayer() {
         specificLayer.setOpacity(0.5);
 
     }
+
 }
 
 function addingSavedFeaturesToLayer() {
@@ -309,6 +311,7 @@ $(document).ready(
           if (selectedLayer == layers[i].fields['layername']) {
             $("#infofield").val(layers[i].fields['info']);
             $("#yearfield").val(layers[i].fields['year']);
+            console.log(layers[i].fields['layername'])
         }
       }
 
@@ -334,12 +337,13 @@ function clearMapOnly() {
 
 $(function(){
   $('#fieldNext').on('click', function(){
-    if ($('select#layer').find(":selected").index() <= $('select#layer').length) {
-      var selected_element = $('select#layer option:selected');
-      selected_element.removeAttr('selected');
-      selected_element.next().attr('selected', 'selected');
-      $('select#layer').val(selected_element.next().val());
+    if ($('select#layer').find(":selected").index() <= $('select#layer option').length) {
+      var selectedElement = $('select#layer option:selected');
+      selectedElement.removeAttr('selected');
+      selectedElement.next().attr('selected', 'selected');
+      $('select#layer').val(selectedElement.next().val());
       $("select#layer").trigger('change');
+
 }
 
 
@@ -349,30 +353,49 @@ $(function(){
 $(function(){
   $('#fieldPrevious').on('click', function(){
       if ($('select#layer').find(":selected").index() != 0) {
-        var selected_element = $('select#layer option:selected');
-        selected_element.removeAttr('selected');
-        selected_element.prev().attr('selected', 'selected');
-        $('select#layer').val(selected_element.prev().val());
+        var selectedElement = $('select#layer option:selected');
+        selectedElement.removeAttr('selected');
+        selectedElement.prev().attr('selected', 'selected');
+        $('select#layer').val(selectedElement.prev().val());
         $("select#layer").trigger('change');
-        clearMapOnly();
+        clearLastAdded();
 }
 
   });
 });
+
+function clearLastAdded() {
+    var names = document.getElementById('layer');
+    var userColour = names.options[names.selectedIndex].value;
+    var text = names.options[names.selectedIndex].text;
+    var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
+    var nameArray = string.split(", ");
+    specificLayer = map.getLayers().getArray();
+    specificLayer.splice(0, 1);
+    console.log(specificLayer[0].getSource())
+    for (let name of nameArray) {
+        var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
+        features = specificLayer[0].getSource().getFeatures();
+        specificLayer[0].getSource().clear();
+        map.addLayer(stamen)
+
+
+
+}
+
+}
 
 function getKMLfromCurrentMap() {
     specificLayer = map.getLayers().getArray();
     specificLayer.splice(0, 1);
     console.log(specificLayer)
 
-    var featureList = new Array;
     var specificSource = new ol.source.Vector({})
 
     for (var i = 0; i < map.getLayers().getArray().length; i++) {
         features = specificLayer[i].getSource().getFeatures();
         console.log(features[0]);
         specificSource.addFeature(features[0]);
-        console.log(features[i])
 
 
     }

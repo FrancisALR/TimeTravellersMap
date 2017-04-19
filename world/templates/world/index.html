@@ -61,8 +61,10 @@
   </form>
 </form>
   <input type="button" value="Clear" id="clearform">
-  <input type="button" value= "Back" id="fieldPrevious" class="bkwdbutton">   <input type="button" value="Forward"id="fieldNext" class="fwdbutton">
-
+  <input type="button" value= "Back" id="fieldPrevious" class="bkwdbutton">
+  <button type="button" value="Forward" id = "fieldNext">
+    <img src = "{% static "world/images/fwd.png" %}">
+  </button>
         </div>
         <div id="mapcontainer" class="mapcontainer"></div>
         <div id="info"></div>
@@ -71,7 +73,6 @@
 
 
     </div>
-
     <input type="button" value="View KML" onclick="getKMLfromCurrentMap()">
 </body>
 </select>
