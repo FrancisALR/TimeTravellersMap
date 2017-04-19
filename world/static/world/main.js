@@ -324,6 +324,7 @@ $( "#clearform" ).click(function() {
   for (layer in map.getLayers()) {
     if (map.getLayers().getArray().length > 1) {
       map.getLayers().removeAt(1);
+
   }
 }
 })});
@@ -333,6 +334,8 @@ function clearMapOnly() {
     if (map.getLayers().getArray().length > 1) {
       map.getLayers().removeAt(1);
     }}
+
+
 }
 
 $(function(){
@@ -357,7 +360,7 @@ $(function(){
         selectedElement.removeAttr('selected');
         selectedElement.prev().attr('selected', 'selected');
         $('select#layer').val(selectedElement.prev().val());
-        $("select#layer").trigger('change');
+        // $("select#layer").trigger('change');
         clearLastAdded();
 }
 
@@ -372,17 +375,15 @@ function clearLastAdded() {
     var nameArray = string.split(", ");
     specificLayer = map.getLayers().getArray();
     specificLayer.splice(0, 1);
-    console.log(specificLayer[0].getSource())
+    console.log(specificLayer[0].getSource().getFeatures())
     for (let name of nameArray) {
         var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
-        features = specificLayer[0].getSource().getFeatures();
-        specificLayer[0].getSource().clear();
+        features = specificLayer[1].getSource().getFeatures();
+        console.log(features)
+        console.log(specificLayer[0].getSource())
+        specificLayer[0].getSource().clear()
         map.addLayer(stamen)
-
-
-
-}
-
+    }
 }
 
 function getKMLfromCurrentMap() {
@@ -391,12 +392,17 @@ function getKMLfromCurrentMap() {
     console.log(specificLayer)
 
     var specificSource = new ol.source.Vector({})
-
+    var containsArray = new Array;
+    var addArray = new Array;
     for (var i = 0; i < map.getLayers().getArray().length; i++) {
         features = specificLayer[i].getSource().getFeatures();
-        console.log(features[0]);
-        specificSource.addFeature(features[0]);
 
+        console.log(features[0].getProperties().name)
+        console.log(containsArray)
+        if (containsArray.indexOf(features[0].getProperties().name) === -1) {
+          containsArray.push(features[0].getProperties().name)
+          specificSource.addFeatures(features);
+      }
 
     }
     var kmlString = new ol.format.KML({})
