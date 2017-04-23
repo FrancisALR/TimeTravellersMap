@@ -1,0 +1,79 @@
+\documentclass[12pt,twoside]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[useregional]{datetime2}
+
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{A Time Traveller's Map}
+\fancyfoot{}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,CE]{Chapter \chaptername}
+\fancyfoot[CO,RE]{Francis Rooney}
+\graphicspath{ {images/} }
+
+\title{A Time Traveller's Map} 
+\author{Francis Rooney} 
+\begin{document} 
+
+
+
+\begin{titlepage}
+    \begin{center}
+        \vspace{1cm}
+        
+        \textbf{A Time Travellers Map}
+        \break
+        \break
+        \vspace{1.5cm}
+        \textbf{Francis Rooney}
+        
+         \vspace{1.5cm}
+        
+        \includegraphics{tuoslogo.jpg}
+        
+        \vspace{1.5cm}
+        
+        \textbf{Supervisor: Dr Siobhan North}
+        \break
+        \break
+        \today
+        \vfill
+        
+        This report is submitted in partial fullfilment of the requirement for the degree of\\
+        Computer Science by Francis Rooney
+        
+        \vspace{0.8cm}
+        
+              
+        Department of Computer Science\\
+        University of Sheffield\\
+        England\\
+        \date{Day Month Year}
+        
+    \end{center}
+\end{titlepage}
+
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/introduction}
+
+
+\chapter{Literature Review}
+\input{chapters/ch02}
+
+\chapter{System Design}
+\input{chapters/ch03}
+
+
+
+
+
+
+\end{document}
+

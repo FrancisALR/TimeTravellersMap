@@ -1,6 +1,6 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'world/style.css' %}" />
+
 
 <html>
 
@@ -10,10 +10,10 @@
     <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'world/style.css' %}" />
     <script>
     $(function() {
-        $('#add_more').click(function() {
+        $('#add_layer').click(function() {
             console.log('clicked')
             var formcount = $('#id_nested-TOTAL_FORMS').val();
             console.log(formcount)
@@ -32,14 +32,14 @@
             <li><a href="../../world/show_layers">Edit Layers</a></li>
         </ul>
     </header>
-
-    <div class="container">
+<body>
+    <div class="tablecontainer">
         <form action="" method="post">
             {% csrf_token %}
 
             <div id="form_set">
                 {{form}} {{ map_formset.management_form }} {% for form in map_formset.forms %}
-                <table class='no_error'>
+                <table>
                     {{ form.as_table }}
                 </table>
                 {% endfor %}
@@ -47,19 +47,23 @@
             <div id="empty_form" style="display:none">
                 <table class='no_error'>
                     {{ map_formset.empty_form.as_table }}
-
+                    
                 </table>
             </div>
 
             <th></th>
-            <td><input type="submit" name="submit" value="Submit" class="button" </td>
-                </tr>
+            <td><input type="button" value="Add Layer" id="add_layer"></td>
+            <td><input type="submit" name="submit" value="Submit" class="submit-button"></td>
+
                 </table>
         </form>
+        <!-- <input type="button" value="Add Layer" id="add_layer"></td>
+        <input type="submit" name="submit" value="Submit" class="submit-button"></td> -->
 
-        <input type="button" value="Add More" id="add_more">
+
     </div>
+</body>
 
-    <footer> </footer>
+<footer> Francis Rooney | University of Sheffield 2017</footer>
 
 </html>

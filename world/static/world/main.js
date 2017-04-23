@@ -306,8 +306,11 @@ $(document).ready(
       var url = "map/" + $('select#map').val() + "/all_json_models";
       var map = $(this).val();
       var selectedLayer = $(this).children(":selected").attr("id");
+      console.log('here')
       $.getJSON(url, function(layers) {
         for (var i = 0; i < layers.length; i++) {
+          console.log(selectedLayer)
+          console.log(layers[i].fields['layername'])
           if (selectedLayer == layers[i].fields['layername']) {
             $("#infofield").val(layers[i].fields['info']);
             $("#yearfield").val(layers[i].fields['year']);
@@ -353,38 +356,38 @@ $(function(){
   });
 });
 
-$(function(){
-  $('#fieldPrevious').on('click', function(){
-      if ($('select#layer').find(":selected").index() != 0) {
-        var selectedElement = $('select#layer option:selected');
-        selectedElement.removeAttr('selected');
-        selectedElement.prev().attr('selected', 'selected');
-        $('select#layer').val(selectedElement.prev().val());
-        // $("select#layer").trigger('change');
-        clearLastAdded();
-}
-
-  });
-});
-
-function clearLastAdded() {
-    var names = document.getElementById('layer');
-    var userColour = names.options[names.selectedIndex].value;
-    var text = names.options[names.selectedIndex].text;
-    var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
-    var nameArray = string.split(", ");
-    specificLayer = map.getLayers().getArray();
-    specificLayer.splice(0, 1);
-    console.log(specificLayer[0].getSource().getFeatures())
-    for (let name of nameArray) {
-        var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
-        features = specificLayer[1].getSource().getFeatures();
-        console.log(features)
-        console.log(specificLayer[0].getSource())
-        specificLayer[0].getSource().clear()
-        map.addLayer(stamen)
-    }
-}
+// $(function(){
+//   $('#fieldPrevious').on('click', function(){
+//       if ($('select#layer').find(":selected").index() != 0) {
+//         var selectedElement = $('select#layer option:selected');
+//         selectedElement.removeAttr('selected');
+//         selectedElement.prev().attr('selected', 'selected');
+//         $('select#layer').val(selectedElement.prev().val());
+//         // $("select#layer").trigger('change');
+//         clearLastAdded();
+// }
+//
+//   });
+// });
+//
+// function clearLastAdded() {
+//     var names = document.getElementById('layer');
+//     var userColour = names.options[names.selectedIndex].value;
+//     var text = names.options[names.selectedIndex].text;
+//     var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
+//     var nameArray = string.split(", ");
+//     specificLayer = map.getLayers().getArray();
+//     specificLayer.splice(0, 1);
+//     console.log(specificLayer[0].getSource().getFeatures())
+//     for (let name of nameArray) {
+//         var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
+//         features = specificLayer[1].getSource().getFeatures();
+//         console.log(features)
+//         console.log(specificLayer[0].getSource())
+//         specificLayer[0].getSource().clear()
+//         map.addLayer(stamen)
+//     }
+// }
 
 function getKMLfromCurrentMap() {
     specificLayer = map.getLayers().getArray();

@@ -1,57 +1,29 @@
-div.tablecontainer {
-  margin: auto;
-  margin-top: none;
-  padding: 5px;
-  border: 1px solid gray;
-  width: 70%;
-  position: relative;
-  height: 100%;
-}
 div.container {
   margin-top: 10px;
   padding-top: 5px;
   width: 90%;
   border: 1px solid gray;
-
 }
 
 input.submit-button {
   margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-#formset {
-  width: 70%;
-  margin:auto;
-}
-
-
-#mapname_table {
-  background-color: #efefef;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
-  table-layout: fixed;
-}
-input {
-  box-shadow: 1px 1px 4px #EBEBEB;
-    -moz-box-shadow: 1px 1px 4px #EBEBEB;
-    -webkit-box-shadow: 1px 1px 4px #EBEBEB;
+  table-layout: auto;
 }
 
 th, td {
   text-align: left;
   padding: 8px;
-  font-weight: normal;
+  width: auto;
 }
 
 th {
-  /*background-color: #333;*/
-  color: black;
-  font-weight: normal;
-  width: 150px;
+  background-color: #333;
+  color: white;
 }
 
 ul {
@@ -79,15 +51,15 @@ li a:hover {
 }
 
 footer {
-  position: relative;
+  position: fixed;
   right: 0;
   bottom: 0;
   left: 0;
-  padding-top: 15px;
-  height: 50px;
+  padding: 1rem;
+  height: 30px;
   background-color: #efefef;
   text-align: center;
-  display: block;
+
 }
 
 header {
@@ -102,13 +74,12 @@ header {
   visibility: hidden;
 }
 
-html, body {
-  font-family: Helvetica;
-  height: 100%;
-}
+
+
+
 
 #map, #layer, #dropdown {
-  width: 200px;
+  width: 150px;
 }
 
 #left {
@@ -119,7 +90,7 @@ html, body {
 }
 
 #mapcontainer {
-  height: 800px;
+  height: 550px;
   margin-left: 250px;
   border-left: 1px solid gray;
   padding: 1em;
@@ -145,14 +116,6 @@ html, body {
 
 }
 
-input.kmlbutton {
-  margin-top: 5px;
-}
-
 #fullform {}
 
 #fieldNext {}
-
-#mapsform {
-  padding-top: 50px;
-}

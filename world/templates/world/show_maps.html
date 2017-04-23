@@ -1,6 +1,5 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'world/style.css' %}" />
 
 <html>
 
@@ -11,7 +10,7 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'world/style.css' %}" />
 </head>
 <header>
     <ul>
@@ -24,7 +23,7 @@
 </header>
 
 <body>
-    <div class=container>
+    <div class=tablecontainer>
         <table id="maptable">
             <tr>
                 <th>Map Name</th>
@@ -41,6 +40,6 @@
     </div>
 </body>
 
-<footer> </footer>
+<footer> Francis Rooney | University of Sheffield 2017</footer>
 
 </html>
