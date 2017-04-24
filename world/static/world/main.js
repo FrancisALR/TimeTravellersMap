@@ -118,9 +118,6 @@ function init() {
               window.app = {};
       var app = window.app;
 
-
-
-
 }
 
 function addingSavedMapFeaturesToLayer() {
@@ -173,7 +170,6 @@ function addingSavedMapFeaturesToLayer() {
         //console.log(specificSource.getFeatures())
         map.addLayer(specificLayer);
         specificLayer.setOpacity(0.5);
-
     }
 
 }
@@ -226,13 +222,13 @@ function addingSavedFeaturesToLayer() {
         })
         console.log(specificSource.getFeatures());
         map.addLayer(specificLayer);
+        document.getElementById('exportkml').disabled = false;
 
     }
 }
 
 function addingFeaturesToLayer() {
-
-    var names = document.getElementById('value').value;
+    var names = document.getElementById("value").value;
     var nameArray = names.split(", ");
 
     for (let name of nameArray) {
@@ -273,7 +269,7 @@ function addingFeaturesToLayer() {
         })
         //console.log(specificSource.getFeatures())
         map.addLayer(specificLayer)
-
+        document.getElementById('exportkml').disabled = false;
     }
 }
 
@@ -303,6 +299,7 @@ $(document).ready(
   function() {
     $("select#layer").change(function() {
       addingSavedMapFeaturesToLayer();
+      document.getElementById('exportkml').disabled = false;
       var url = "map/" + $('select#map').val() + "/all_json_models";
       var map = $(this).val();
       var selectedLayer = $(this).children(":selected").attr("id");
@@ -337,8 +334,8 @@ function clearMapOnly() {
     if (map.getLayers().getArray().length > 1) {
       map.getLayers().removeAt(1);
     }}
-
-
+    console.log('here')
+    map.addLayer(stamen)
 }
 
 $(function(){
@@ -394,24 +391,30 @@ function getKMLfromCurrentMap() {
     specificLayer.splice(0, 1);
     console.log(specificLayer)
 
-    var specificSource = new ol.source.Vector({})
-    var containsArray = new Array;
-    var addArray = new Array;
-    for (var i = 0; i < map.getLayers().getArray().length; i++) {
-        features = specificLayer[i].getSource().getFeatures();
+    if (specificLayer[0] == null) {
+      console.log('here')
+      map.addLayer(stamen)
+    }
+    else {
+      var specificSource = new ol.source.Vector({})
+      var containsArray = new Array;
+      var addArray = new Array;
+      for (var i = 0; i < map.getLayers().getArray().length; i++) {
+          features = specificLayer[i].getSource().getFeatures();
+          if (containsArray.indexOf(features[0].getProperties().name) === -1) {
+            containsArray.push(features[0].getProperties().name)
+            specificSource.addFeatures(features);
+        }
 
-        console.log(features[0].getProperties().name)
-        console.log(containsArray)
-        if (containsArray.indexOf(features[0].getProperties().name) === -1) {
-          containsArray.push(features[0].getProperties().name)
-          specificSource.addFeatures(features);
       }
 
+      var kmlString = new ol.format.KML({})
+
+      var kmloutput = kmlString.writeFeatures(specificSource.getFeatures());
+
+      var wnd = window.open("kmloutput", "kmloutput", "_blank");
+      wnd.document.write(kmloutput);
+      clearMapOnly()
+      document.getElementById('exportkml').click()
     }
-    var kmlString = new ol.format.KML({})
-
-    var kmloutput = kmlString.writeFeatures(specificSource.getFeatures());
-
-    var wnd = window.open("about:blank", "", "_blank");
-    wnd.document.write(kmloutput);
 }

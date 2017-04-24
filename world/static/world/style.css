@@ -12,6 +12,7 @@ div.container {
   padding-top: 5px;
   width: 90%;
   border: 1px solid gray;
+  overflow: auto;
 
 }
 
@@ -90,6 +91,20 @@ footer {
   display: block;
 }
 
+.selectstyling {
+  border: 1px solid #ccc;
+  width: 120px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.selectstyling select {
+    /*padding: 5px 8px;*/
+    width: 130%;
+    border: none;
+    background: transparent;
+}
+
 header {
   padding: 1em;
   color: white;
@@ -121,7 +136,7 @@ html, body {
 #mapcontainer {
   height: 800px;
   margin-left: 250px;
-  border-left: 1px solid gray;
+  /*border-left: 1px solid gray;*/
   padding: 1em;
 }
 
@@ -151,8 +166,13 @@ input.kmlbutton {
 
 #fullform {}
 
-#fieldNext {}
-
 #mapsform {
   padding-top: 50px;
 }
+
+button.navbutton {
+  float:left;
+  
+}
+#fieldNext {
+margin-top: 5px;}
