@@ -130,8 +130,8 @@ function addingSavedMapFeaturesToLayer() {
     //console.log(nameArray)
 
     for (let name of nameArray) {
-        //console.log(name)
-        var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
+        
+        var trimmedname = name.replace(/^"+|"+$/g, '');
         var fullytrimmed = trimmedname.trim();
 
 
@@ -182,9 +182,10 @@ function addingSavedFeaturesToLayer() {
     var nameArray = string.split(", ");
     //console.log(nameArray);
     for (let name of nameArray) {
+       console.log(name)
         var trimmedname = name.replace(/^[\n']+|[\n']+$/g, "");
         var fullytrimmed = trimmedname.trim();
-
+        console.log(trimmedname)
 
         var featureList = new Array;
 
@@ -387,6 +388,7 @@ $(function(){
 // }
 
 function getKMLfromCurrentMap() {
+  if (map.getLayers().getArray().length >0) {
     specificLayer = map.getLayers().getArray();
     specificLayer.splice(0, 1);
     console.log(specificLayer)
@@ -401,6 +403,7 @@ function getKMLfromCurrentMap() {
       var addArray = new Array;
       for (var i = 0; i < map.getLayers().getArray().length; i++) {
           features = specificLayer[i].getSource().getFeatures();
+          console.log(features)
           if (containsArray.indexOf(features[0].getProperties().name) === -1) {
             containsArray.push(features[0].getProperties().name)
             specificSource.addFeatures(features);
@@ -412,9 +415,10 @@ function getKMLfromCurrentMap() {
 
       var kmloutput = kmlString.writeFeatures(specificSource.getFeatures());
 
-      var wnd = window.open("kmloutput", "kmloutput", "_blank");
+      var wnd = window.open("", "_blank");
       wnd.document.write(kmloutput);
       clearMapOnly()
       document.getElementById('exportkml').click()
     }
+}
 }
