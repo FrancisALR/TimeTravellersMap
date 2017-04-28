@@ -8,6 +8,7 @@ var sourceF = new ol.source.Vector({
     format: new ol.format.KML({
         extractStyles: false
     })
+
 })
 var generalLayer = new ol.layer.Vector({
     source: sourceF
@@ -178,7 +179,6 @@ function addingSavedMapFeaturesToLayer() {
 }
 
 function addingSavedFeaturesToLayer() {
-    var start = new Date().getTime();
 
     var names = document.getElementById('dropdown');
     var text = names.options[names.selectedIndex].text;
@@ -191,7 +191,6 @@ function addingSavedFeaturesToLayer() {
     for (let name of nameArray) {
         var trimmedname = name.replace(/^[\n']+|[\n']+$/g, "");
         var fullytrimmed = trimmedname.trim();
-        console.log(trimmedname)
 
         var featureList = new Array;
 
@@ -227,67 +226,70 @@ function addingSavedFeaturesToLayer() {
                 })
             ]
         })
-        console.log(specificSource.getFeatures());
         map.addLayer(specificLayer);
         specificLayer.setOpacity(0.5);
         document.getElementById('exportjson').disabled = false;
-        var end = new Date().getTime();
-        totaltime = end-start
-        return totaltime
+
     }
   }
 }
 
 function addingFeaturesToLayer() {
+
     var names = document.getElementById("value").value;
     var nameArray = names.split(", ");
 
-    for (let name of nameArray) {
 
-        var featureList = new Array;
 
-        var specificSource = new ol.source.Vector({})
-        features = generalLayer.getSource().getFeatures();
 
-        for (var i = 0; i < features.length; i++) {
-            if (features[i].getProperties().name == name) {
-                featureList.push(features[i].getProperties().name)
-                console.log(featureList)
-                console.log('here')
-                specificSource.addFeature(features[i])
-                //console.log(features[i])
-                map.removeLayer(generalLayer)
-                //console.log(featureList)
-                break;
+        for (let name of nameArray) {
+
+            var featureList = new Array;
+
+            var specificSource = new ol.source.Vector({})
+            features = generalLayer.getSource().getFeatures();
+
+            for (var i = 0; i < features.length; i++) {
+                if (features[i].getProperties().name == name) {
+                    featureList.push(features[i].getProperties().name)
+
+                    specificSource.addFeature(features[i])
+                    //console.log(features[i])
+                    map.removeLayer(generalLayer)
+                    //console.log(featureList)
+                    break;
+                }
+
             }
 
-        }
 
 
 
-
-        var specificLayer = new ol.layer.Vector({
-            source: specificSource,
-            style: [
-                new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: 'black',
-                        width: 1
-                    }),
-                    fill: new ol.style.Fill({
-                        color: [0, 255, 255, 0.5]
+            var specificLayer = new ol.layer.Vector({
+                source: specificSource,
+                style: [
+                    new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: 'black',
+                            width: 1
+                        }),
+                        fill: new ol.style.Fill({
+                            color: [0, 255, 255, 0.5]
+                        })
                     })
-                })
-            ]
-        })
-        //console.log(specificSource.getFeatures())
-        console.log(nameArray.length)
-        console.log(featureList.length)
-        if (1 == featureList.length) {
-        map.addLayer(specificLayer)
-        document.getElementById('exportjson').disabled = false;
-      }
+                ]
+            })
+            //console.log(specificSource.getFeatures())
+
+            if (1 == featureList.length) {
+            map.addLayer(specificLayer)
+            document.getElementById('exportjson').disabled = false;
+
+
+          }
+
     }
+
 }
 
 $(document).ready(
@@ -352,6 +354,7 @@ function clearMapOnly() {
       map.getLayers().removeAt(1);
     }}
     console.log('here')
+    document.getElementById("mapsform").reset();
     map.addLayer(stamen)
 }
 
@@ -369,39 +372,6 @@ $(function(){
 
   });
 });
-
-// $(function(){
-//   $('#fieldPrevious').on('click', function(){
-//       if ($('select#layer').find(":selected").index() != 0) {
-//         var selectedElement = $('select#layer option:selected');
-//         selectedElement.removeAttr('selected');
-//         selectedElement.prev().attr('selected', 'selected');
-//         $('select#layer').val(selectedElement.prev().val());
-//         // $("select#layer").trigger('change');
-//         clearLastAdded();
-// }
-//
-//   });
-// });
-//
-// function clearLastAdded() {
-//     var names = document.getElementById('layer');
-//     var userColour = names.options[names.selectedIndex].value;
-//     var text = names.options[names.selectedIndex].text;
-//     var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
-//     var nameArray = string.split(", ");
-//     specificLayer = map.getLayers().getArray();
-//     specificLayer.splice(0, 1);
-//     console.log(specificLayer[0].getSource().getFeatures())
-//     for (let name of nameArray) {
-//         var trimmedname = name.replace(/[^a-zA-Z0-9]/g, "");
-//         features = specificLayer[1].getSource().getFeatures();
-//         console.log(features)
-//         console.log(specificLayer[0].getSource())
-//         specificLayer[0].getSource().clear()
-//         map.addLayer(stamen)
-//     }
-// }
 
 function getJsonfromCurrentMap() {
   if (map.getLayers().getArray().length >0) {
@@ -432,7 +402,6 @@ function getJsonfromCurrentMap() {
       }
 
       var geoJSONExport = new ol.format.GeoJSON({
-        // 'maxDepth':10,
         'extractStyles':true,
         'defaultdataprojection': 'EPSG:3857',
         'featureProject' : 'EPSG:3857'
@@ -447,38 +416,4 @@ function getJsonfromCurrentMap() {
     }
 
 }
-}
-
-// Functions to test run time
-function timeFrancePolygon() {
-  var starttime = new Date().getTime();
-  for (var i=0, len = 81831; i<len; i++){
-    console.log('i')
-  }
-  var endtime = new Date().getTime();
-  var total = endtime - starttime
-  console.log('Execution time: ' + total)
-  return total
-}
-
-
-function timeInitialLoad() {
-  var completetimes = 0
-  for (var i=0, len = 100; i<len; i++){
-    var time = init()
-    completetimes+=time
-  }
-  console.log(completetimes)
-  averagedtime = completetimes/100
-  console.log(averagedtime)
-}
-
-function timeAddingLoad() {
-  var completetimes = 0
-  for (var i=0, len = 100; i<len; i++){
-  var time = addingFeaturesToLayer('France,Austria')
-  completetimes+= time
-}
-
-
 }
