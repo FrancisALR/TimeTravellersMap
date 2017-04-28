@@ -40,12 +40,12 @@
             <select id="dropdown">
               <option> Select a Layer </option>
               {% for entry in user_layers %}
-              <option value="{{ entry.layername }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
+              <option value="{{ entry.layercolour }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
               {% endfor %}
               </select>
             </div>
               <input type="button"  value="Submit" class="submit-button" onclick="addingSavedFeaturesToLayer()" />
-              <input type="button" value="View KML" onclick="getKMLfromCurrentMap()" class="kmlbutton" id="exportkml" disabled="true">
+              <input type="button" value="View GeoJSON" onclick="getJsonfromCurrentMap()" class="jsonbutton" id="exportjson" disabled="true">
 
     <form action="" method="get" accept-charset="utf-8" id="mapsform">
     <div class="selectstyling">
@@ -74,7 +74,8 @@
         <div id="mapcontainer" class="mapcontainer"></div>
         <div id="info"></div>
         <div class="clear"></div>
-        <div id="onclickinfo"></div>
+        <input type="button" value="timetest" onclick="timeInitialLoad()">
+        <input type="button" value="timetest" onclick="timeAddingLoad()">
 
 
     </div>

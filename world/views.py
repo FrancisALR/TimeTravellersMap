@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404, render, redi
 from django.contrib.gis.shortcuts import render_to_kml
 from django.core.serializers import serialize
 from world.forms import CountryForm, UserMapForm, MapFormSet, CountryEditForm
-from .models import WorldBorder, CountryLists, UserMaps
+from .models import WorldBorder, CountryList, UserMap
 import json
 
 # home page of site, main functionality and map on this page
@@ -11,14 +11,14 @@ def index(request):
     query = WorldBorder.objects.values_list('name', flat=True) # creates queryset of all world border objects
     query_list = list(query)
     json_data = json.dumps(query_list) # casts to json data for use in javascript
-    all_layers = CountryLists.objects.all() # creates queryset of all user defined layers
-    all_maps = UserMaps.objects.all() # creates queryset of all user defined maps
+    all_layers = CountryList.objects.all() # creates queryset of all user defined layers
+    all_maps = UserMap.objects.all() # creates queryset of all user defined maps
     return render(request, 'world/index.html', {"names": json_data, "user_layers": all_layers, "borders" : WorldBorder.objects.all(), "user_maps" : all_maps})
 
 # casts map to json for populating a select with that map's layers
 def all_json_models (request, map):
-    current_map = UserMaps.objects.get(mapname=map) # gets map from url input
-    models = CountryLists.objects.all().filter(relatedmap=current_map)
+    current_map = UserMap.objects.get(mapname=map) # gets map from url input
+    models = CountryList.objects.all().filter(relatedmap=current_map)
     ordered = models.order_by('year')
     json_models = serialize("json",ordered) # serializes to json
     return HttpResponse (json_models, content_type="application/javascript") #returns and is picked up by JS funcion
@@ -36,7 +36,7 @@ def add_map(request):
                 return redirect('/world')
     else:
         form = UserMapForm()
-        map_formset = MapFormSet(instance=UserMaps(), prefix="nested")
+        map_formset = MapFormSet(instance=UserMap(), prefix="nested")
     return render(request, 'world/add_map.html', {'form' : form, "map_formset": map_formset})
 
 # adds a single layer
@@ -51,7 +51,8 @@ def add_layer(request):
             countriesstring = request.POST.get('listofcountries', '')
             countrylist = countriesstring.split(", ")
             year = request.POST.get('year', '')
-            new_countrylist = CountryLists(layername=name, countrylist=countrylist, year=year)
+            layercolour = request.POST.get('layercolour', '')
+            new_countrylist = CountryList(layername=name, countrylist=countrylist, year=year, layercolour=layercolour)
             new_countrylist.save()
 
             return redirect('/world')
@@ -61,14 +62,14 @@ def add_layer(request):
 
 
 def show_maps(request):
-    all_layers = CountryLists.objects.all()
-    all_maps = UserMaps.objects.all()
+    all_layers = CountryList.objects.all()
+    all_maps = UserMap.objects.all()
     ordered_maps = all_maps.order_by('mapname')
     return render(request, 'world/show_maps.html', { "user_layers": all_layers, "user_maps" : ordered_maps})
 
 def edit_map(request, map_name):
 
-    user_map = get_object_or_404(UserMaps, mapname=map_name)
+    user_map = get_object_or_404(UserMap, mapname=map_name)
     form = UserMapForm(instance=user_map)
     formset = MapFormSet(instance=user_map,  prefix="nested")
 
@@ -87,7 +88,7 @@ def edit_map(request, map_name):
     return render(request, 'world/edit_map.html', {'form' : form, "map_formset": formset})
 
 def edit_layer(request,layer_name):
-    user_layer = get_object_or_404(CountryLists, layername=layer_name)
+    user_layer = get_object_or_404(CountryList, layername=layer_name)
     form = CountryEditForm(instance=user_layer)
     if request.method == "POST":
         form = CountryEditForm(request.POST, instance=user_layer)
@@ -99,11 +100,11 @@ def edit_layer(request,layer_name):
     return render(request, 'world/edit_layer.html', {'form' : form})
 
 def show_layers(request):
-    all_layers = CountryLists.objects.all()
+    all_layers = CountryList.objects.all()
     return render(request, 'world/show_layers.html', { "user_layers": all_layers})
 
 def delete_map(request, map_name):
-    to_delete = get_object_or_404(UserMaps, mapname=map_name)
+    to_delete = get_object_or_404(UserMap, mapname=map_name)
     to_delete.delete()
     return redirect('/world')
 

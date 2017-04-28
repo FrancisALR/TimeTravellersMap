@@ -14,6 +14,8 @@ var generalLayer = new ol.layer.Vector({
 })
 
 function init() {
+  var starttime = new Date().getTime();
+
   console.log('initialized')
 
   var dragAndDropInteraction = new ol.interaction.DragAndDrop({
@@ -55,13 +57,12 @@ function init() {
 
     var sourceF = new ol.source.Vector({
         projection: new ol.proj.get("EPSG:3857"),
-        url: 'http://localhost:8080/all_countries',
+        url: 'http://localhost:8080/world/all_countries',
         format: new ol.format.KML({
             extractStyles: false
         })
+
     })
-
-
     map.addLayer(generalLayer)
 
     generalLayer.getSource().on('change', function(evt) {
@@ -82,8 +83,6 @@ function init() {
           var displayFeatureInfo = function(pixel) {
             var features = [];
             map.forEachFeatureAtPixel(pixel, function(feature) {
-              feature.setGeometry('XY')
-              console.log(feature)
               features.push(feature);
             });
             if (features.length > 0) {
@@ -115,12 +114,13 @@ function init() {
           });
 
           map.addInteraction(select);
-              select.on('select', function(e) {
-                document.getElementById('onclickinfo').innerHTML = '&nbsp;'
-              });
 
               window.app = {};
       var app = window.app;
+      var endtime = new Date().getTime();
+      var totaltime = endtime - starttime
+      console.log(totaltime)
+      return totaltime
 
 }
 
@@ -150,7 +150,6 @@ function addingSavedMapFeaturesToLayer() {
                 specificSource.addFeature(features[i])
                 //console.log(features[i])
                 map.removeLayer(generalLayer)
-                console.log(features[i])
                 break;
             }
 
@@ -171,9 +170,6 @@ function addingSavedMapFeaturesToLayer() {
             ]
         })
 
-        //console.log(specificSource.getFeatures())
-
-          console.log(featureList)
         map.addLayer(specificLayer);
         specificLayer.setOpacity(0.5);
 
@@ -182,17 +178,17 @@ function addingSavedMapFeaturesToLayer() {
 }
 
 function addingSavedFeaturesToLayer() {
+    var start = new Date().getTime();
 
     var names = document.getElementById('dropdown');
     var text = names.options[names.selectedIndex].text;
+    var userColour = names.options[names.selectedIndex].value;
     var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
     var nameArray = string.split(", ");
     //console.log(nameArray);
-    console.log(text)
     if (text != "Select a Layer") {
 
     for (let name of nameArray) {
-       console.log(name)
         var trimmedname = name.replace(/^[\n']+|[\n']+$/g, "");
         var fullytrimmed = trimmedname.trim();
         console.log(trimmedname)
@@ -226,15 +222,18 @@ function addingSavedFeaturesToLayer() {
                         width: 1
                     }),
                     fill: new ol.style.Fill({
-                        color: [0, 255, 255, 0.5]
+                        color: userColour
                     })
                 })
             ]
         })
         console.log(specificSource.getFeatures());
         map.addLayer(specificLayer);
-        document.getElementById('exportkml').disabled = false;
-
+        specificLayer.setOpacity(0.5);
+        document.getElementById('exportjson').disabled = false;
+        var end = new Date().getTime();
+        totaltime = end-start
+        return totaltime
     }
   }
 }
@@ -286,7 +285,7 @@ function addingFeaturesToLayer() {
         console.log(featureList.length)
         if (1 == featureList.length) {
         map.addLayer(specificLayer)
-        document.getElementById('exportkml').disabled = false;
+        document.getElementById('exportjson').disabled = false;
       }
     }
 }
@@ -317,18 +316,18 @@ $(document).ready(
   function() {
     $("select#layer").change(function() {
       addingSavedMapFeaturesToLayer();
-      document.getElementById('exportkml').disabled = false;
+      document.getElementById('exportjson').disabled = false;
       var url = "map/" + $('select#map').val() + "/all_json_models";
       var map = $(this).val();
       var selectedLayer = $(this).children(":selected").attr("id");
-      console.log('here')
+      // console.log('here')
       $.getJSON(url, function(layers) {
         for (var i = 0; i < layers.length; i++) {
-          console.log(selectedLayer)
-          console.log(layers[i].fields['layername'])
+
           if (selectedLayer == layers[i].fields['layername']) {
             $("#infofield").val(layers[i].fields['info']);
             $("#yearfield").val(layers[i].fields['year']);
+            console.log(selectedLayer)
             console.log(layers[i].fields['layername'])
         }
       }
@@ -404,13 +403,11 @@ $(function(){
 //     }
 // }
 
-function getKMLfromCurrentMap() {
+function getJsonfromCurrentMap() {
   if (map.getLayers().getArray().length >0) {
     specificLayer = map.getLayers().getArray();
     specificLayer.splice(0, 1);
-    console.log(specificLayer)
     if (specificLayer[0] == null) {
-      console.log('here')
       map.addLayer(stamen)
     }
     else {
@@ -419,12 +416,13 @@ function getKMLfromCurrentMap() {
       var addArray = new Array;
       for (var i = 0; i < map.getLayers().getArray().length; i++) {
           features = specificLayer[i].getSource().getFeatures();
+          for (let feature of features) {
 
+        }
           if (features.length >200) {
             break;
           }
           else {
-          console.log(features)
           if (containsArray.indexOf(features[0].getProperties().name) === -1) {
             containsArray.push(features[0].getProperties().name)
             specificSource.addFeatures(features);
@@ -442,12 +440,45 @@ function getKMLfromCurrentMap() {
       })
 
       var geojsonoutput = geoJSONExport.writeFeatures(specificSource.getFeatures());
-      console.log(geojsonoutput)
       var wnd = window.open("", "_blank");
       wnd.document.write(geojsonoutput);
       clearMapOnly()
-      document.getElementById('exportkml').click()
+      document.getElementById('exportjson').click()
     }
 
 }
+}
+
+// Functions to test run time
+function timeFrancePolygon() {
+  var starttime = new Date().getTime();
+  for (var i=0, len = 81831; i<len; i++){
+    console.log('i')
+  }
+  var endtime = new Date().getTime();
+  var total = endtime - starttime
+  console.log('Execution time: ' + total)
+  return total
+}
+
+
+function timeInitialLoad() {
+  var completetimes = 0
+  for (var i=0, len = 100; i<len; i++){
+    var time = init()
+    completetimes+=time
+  }
+  console.log(completetimes)
+  averagedtime = completetimes/100
+  console.log(averagedtime)
+}
+
+function timeAddingLoad() {
+  var completetimes = 0
+  for (var i=0, len = 100; i<len; i++){
+  var time = addingFeaturesToLayer('France,Austria')
+  completetimes+= time
+}
+
+
 }
