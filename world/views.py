@@ -108,6 +108,16 @@ def delete_map(request, map_name):
     to_delete.delete()
     return redirect('/world')
 
+def delete_layer(request, layer_name):
+    to_delete = get_object_or_404(CountryList, layername=layer_name)
+    to_delete.delete()
+    return redirect('/world')
+
+
+# Solution to add WorldBorder entries to map with kml taken from following source
+# Title: How to display my PostGis geometry on the GeoDjango map widget
+# Author: User dmh126 at gis.stackexchange
+# Available at: https://gis.stackexchange.com/questions/138278/how-to-dispay-my-postggis-geometry-on-the-geodjango-map-widget
 def all_countries(request):
     all_countries = WorldBorder.objects.kml()
     return render_to_kml("world/placemarks.kml", {'places' : all_countries})

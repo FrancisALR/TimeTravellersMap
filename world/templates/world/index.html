@@ -1,6 +1,7 @@
 {% load static %}
 
 <!DOCTYPE HTML>
+
 <html>
 
 <head>
@@ -12,11 +13,9 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'world/style.css' %}" />
 
-    <script type=text/javascript src = "{% static "world/main.js" %}"></script>
+    <script type=text/javascript src="{% static "world/main.js" %}"></script>
 
-<style>
 
-</style>
 </head>
 <header>
     <ul>
@@ -31,56 +30,59 @@
 <body onload='init()'>
     <div class="container">
         <div id="left" class="buttons">
-          <form id='fullform'>
-            <form id='addFeatureForm'>
-                <input type="text" name="addFeatureValue" placeholder="Add country list here..." id='value' />
-                <input type="button" value="Submit" class="submit-button" onclick="addingFeaturesToLayer()" id='addindividualfeatures'/>
+            <form id='fullform'>
+                <form id='addFeatureForm'>
+                    <input type="text" name="addFeatureValue" placeholder="Add country list here..." id='value' />
+                    <input type="button" value="Add Countries" class="submit-button" onclick="addingFeaturesToLayer()" id='addindividualfeatures' />
+                </form>
+
+                <div class="selectstyling">
+                    <select id="dropdown">
+                      <option> Select a Layer </option>
+                      {% for entry in user_layers %}
+                      <option value="{{ entry.layercolour }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+
+                <input type="button" value="Add Layer" class="submit-button" onclick="addingSavedFeaturesToLayer()" />
+
+                <form action="" method="get" accept-charset="utf-8" id="mapsform">
+                    <div class="selectstyling">
+                        <select name="map" id="map">
+                          <option value = "Z"> Select a Map </option >
+                          {% for entry in user_maps %}
+                          <option value = "{{entry.mapname}}" > {{entry.mapname}} </option >
+                          {% endfor%}
+                        </select>
+                    </div>
+                    <select class="my-select" name="layer" id="layer" disabled="true" width=10% max-width=90, data-default="defaultSelected">
+                      <option value="defaultSelected"> Select a layer </option>
+                    </select>
+                    <textarea id="infofield" value="" readonly=""></textarea>
+                    <textarea id="yearfield" value="" readonly=""></textarea>
+
+                </form>
             </form>
-<div class="selectstyling">
-            <select id="dropdown">
-              <option> Select a Layer </option>
-              {% for entry in user_layers %}
-              <option value="{{ entry.layercolour }}"> {{ entry.layername }} : {{entry.countrylist}} : {{entry.year}}</option>
-              {% endfor %}
-              </select>
-            </div>
-              <input type="button"  value="Submit" class="submit-button" onclick="addingSavedFeaturesToLayer()" />
-              <input type="button" value="View GeoJSON" onclick="getJsonfromCurrentMap()" class="jsonbutton" id="exportjson" disabled="true">
+            <button type="button" value="Clear" id="clearform" class="navbutton">
+              <img src = "{% static "world/images/clear.png" %}" width="50px">
+            </button>
 
-    <form action="" method="get" accept-charset="utf-8" id="mapsform">
-    <div class="selectstyling">
-    <select name="map" id="map">
-    <option value = "Z"> Select a Map </option >
-    {% for entry in user_maps %}
-    <option value = "{{entry.mapname}}" > {{entry.mapname}} </option >
-    {% endfor%}
-    </select>
-    </div>
-    <select class="my-select" name="layer" id="layer" disabled="true" width=10% max-width=90, data-default="defaultSelected">
-    <option value="defaultSelected"> Select a layer </option>
-    </select>
-    <textarea id="infofield" value="" readonly=""></textarea>
-    <textarea id="yearfield" value="" readonly=""></textarea>
-  </form>
-</form>
-  <button type="button" value="Clear" id = "clearform" class="navbutton">
-    <img src = "{% static "world/images/clear.png" %}" width="50px">
-  </button>
+            <button type="button" value="Forward" id="fieldNext" class="navbutton">
+              <img src = "{% static "world/images/fwd.png" %}" width="50px">
+            </button>
 
-  <button type="button" value="Forward" id = "fieldNext" class="navbutton">
-    <img src = "{% static "world/images/fwd.png" %}" width="50px">
-  </button>
+            <input type="button" value="View GeoJSON" onclick="getJsonfromCurrentMap()" class="jsonbutton" id="exportjson" disabled="true">
+
+            <div id="info"></div>
         </div>
         <div id="mapcontainer" class="mapcontainer"></div>
-        <div id="info"></div>
-        <div class="clear"></div>
-        <input type="button" value="timetest" onclick="timeInitialLoad()">
-        <input type="button" value="timetest" onclick="timeAddingLoad()">
 
+        <div class="clear"></div>
 
     </div>
 </body>
-</select>
 
 <footer>Francis Rooney | University of Sheffield 2017</footer>
+
 </html>

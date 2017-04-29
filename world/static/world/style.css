@@ -1,8 +1,8 @@
 div.tablecontainer {
   margin: auto;
-  margin-top: none;
+  margin-top: 10px;
   padding: 5px;
-  border: 1px solid gray;
+  /*border: 1px solid gray;*/
   width: 70%;
   position: relative;
   height: 100%;
@@ -11,14 +11,15 @@ div.container {
   margin-top: 10px;
   padding-top: 5px;
   width: 90%;
-  border: 1px solid gray;
-  overflow: auto;
+  /*border: 1px solid gray;*/
+
 
 }
 
 input.submit-button {
   margin-top: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 50px;
+
 }
 
 #formset {
@@ -38,8 +39,8 @@ table {
 }
 input {
   box-shadow: 1px 1px 4px #EBEBEB;
-    -moz-box-shadow: 1px 1px 4px #EBEBEB;
-    -webkit-box-shadow: 1px 1px 4px #EBEBEB;
+  -moz-box-shadow: 1px 1px 4px #EBEBEB;
+  -webkit-box-shadow: 1px 1px 4px #EBEBEB;
 }
 
 th, td {
@@ -80,7 +81,7 @@ li a:hover {
 }
 
 footer {
-  position: relative;
+  position: fixed;
   right: 0;
   bottom: 0;
   left: 0;
@@ -99,7 +100,6 @@ footer {
 }
 
 .selectstyling select {
-    /*padding: 5px 8px;*/
     width: 130%;
     border: none;
     background: transparent;
@@ -115,6 +115,7 @@ header {
 
 .my-select {
   visibility: hidden;
+  float: none;
 }
 
 html, body {
@@ -122,8 +123,9 @@ html, body {
   height: 100%;
 }
 
-#map, #layer, #dropdown {
+#map, #dropdown {
   width: 200px;
+  height: auto;
 }
 
 #left {
@@ -136,7 +138,7 @@ html, body {
 #mapcontainer {
   height: 800px;
   margin-left: 250px;
-  /*border-left: 1px solid gray;*/
+  border: 1px solid gray;
   padding: 1em;
 }
 
@@ -157,7 +159,12 @@ html, body {
   padding: 0;
   border: 1px solid;
   border-color: rgba(0, 0, 0, .15);
+  margin-bottom: 10px;
+}
 
+#info {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 input.kmlbutton {
@@ -171,8 +178,49 @@ input.kmlbutton {
 }
 
 button.navbutton {
-  float:left;
-  
+display: inline-block;
 }
 #fieldNext {
-margin-top: 5px;}
+margin-top: 5px;
+margin-bottom: 20px;
+display: inline-block;
+}
+
+.form-style {
+  padding: 10px 20px;
+    background: #D3D3D3;
+    margin: 10px auto;
+    padding: 20px;
+    background: #f4f7f8;
+    border-radius: 8px;
+}
+
+.form-style input {
+  background: #D3D3D3;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: 0;
+  padding: 7px;
+  width: 100%;
+  background-color: #D3D3D3;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
+  margin-bottom: 30px;
+}
+
+.form-style th {
+  width: 200px;
+  colour:#8a97a0;
+}
+
+#maptable th{
+    background: #D3D3D3;
+    margin: 10px auto;
+    background: #333;
+    color: #F0FFFF;
+}
+
+textarea {
+  background: #D3D3D3;
+}

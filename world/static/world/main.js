@@ -1,7 +1,10 @@
 var jsList = "{{names|escapejs}}";
 
 var stamen;
-
+// Solution to add WorldBorder entries to map with kml taken from following source
+// Title: How to display my PostGis geometry on the GeoDjango map widget
+// Author: User dmh126 at gis.stackexchange
+// Available at: https://gis.stackexchange.com/questions/138278/how-to-dispay-my-postggis-geometry-on-the-geodjango-map-widget
 var sourceF = new ol.source.Vector({
     projection: new ol.proj.get("EPSG:3857"),
     url: 'http://localhost:8080/world/all_countries',
@@ -19,6 +22,10 @@ function init() {
 
   console.log('initialized')
 
+  // Solution to overlay external data to the map taken from OpenLayers.org official examples
+  // Title: DragAndDrop
+  // Author: OpenLayers
+  // Available at: https://openlayers.org/en/latest/examples/drag-and-drop.html
   var dragAndDropInteraction = new ol.interaction.DragAndDrop({
         formatConstructors: [
           ol.format.GPX,
@@ -106,6 +113,10 @@ function init() {
             displayFeatureInfo(pixel);
           });
 
+          // Solution modified from OpenLayers.org official examples
+          // Title: Select Features
+          // Author: OpenLayers
+          // Available at: https://openlayers.org/en/latest/examples/select-features.html
           map.on('click', function(evt) {
             displayFeatureInfo(evt.pixel);
           });
@@ -291,7 +302,10 @@ function addingFeaturesToLayer() {
     }
 
 }
-
+// Solution for updating selects modified from Devinterface.com by Stefano
+// Title: Come implementare due dropdown dipendenti l’una dall’altra in Django e jQuery
+// Author: Stefano, Devinterface
+// Available at: https://www.devinterface.com/it/blog/how-to-implement-two-dropdowns-dependent-on-each-other-using-django-and-jquery
 $(document).ready(
     function() {
         $("select#map").change(function() {
@@ -358,6 +372,10 @@ function clearMapOnly() {
     map.addLayer(stamen)
 }
 
+// Solution for moving through select modified to update layer adding
+// Title: Select next option with JQuery
+// Author: Dev, stackoverflow
+// Available at: http://stackoverflow.com/questions/11556557/select-next-option-with-jquery
 $(function(){
   $('#fieldNext').on('click', function(){
     if ($('select#layer').find(":selected").index() <= $('select#layer option').length) {
@@ -379,6 +397,7 @@ function getJsonfromCurrentMap() {
     specificLayer.splice(0, 1);
     if (specificLayer[0] == null) {
       map.addLayer(stamen)
+      window.alert("No layers added")
     }
     else {
       var specificSource = new ol.source.Vector({})

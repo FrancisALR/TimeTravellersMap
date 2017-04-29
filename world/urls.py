@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^add_map$', views.add_map),
     url(r'^map/(?P<map>[\w|\W]+)/all_json_models/$', views.all_json_models),
     url(r'^delete_map/(?P<map_name>.*)$', views.delete_map, name = "delete_map"),
+    url(r'^delete_layer/(?P<layer_name>.*)$', views.delete_layer, name = "delete_layer"),
     url(r'^show_maps', views.show_maps, name='show_maps'),
     url(r'^show_layers', views.show_layers, name="show_layers"),
     url(r'^edit_map/(?P<map_name>.*)', views.edit_map),

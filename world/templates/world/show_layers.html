@@ -26,13 +26,16 @@
     <div class=tablecontainer>
         <table id="maptable">
             <tr>
-                <th>Map Name</th>
+                <th>Layer Name</th>
                 <th>Edit</th>
+                <th>Delete</th>
             </tr>
             {% for entry in user_layers %}
             <tr>
                 <td> {{ entry.layername }}</th>
                         <td><a href="/world/edit_layer/{{entry.layername}}">Edit</a></th>
+                          <td><a href="/world/delete_layer/{{entry.layername}}">Delete</a></th>
+
                             {% endfor%}
         </table>
     </div>
