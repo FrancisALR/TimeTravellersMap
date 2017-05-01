@@ -138,7 +138,7 @@ html, body {
 #mapcontainer {
   height: 800px;
   margin-left: 250px;
-  border: 1px solid gray;
+  /*border: 1px solid gray;*/
   padding: 1em;
 }
 

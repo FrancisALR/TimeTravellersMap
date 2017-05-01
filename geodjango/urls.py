@@ -20,5 +20,5 @@ from world.views import *
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^world/', include('world.urls'))
+    url(r'^world/', include('world.urls')) #link to the world application urls
     ]

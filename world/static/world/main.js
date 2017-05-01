@@ -37,13 +37,6 @@ function init() {
         ]
       });
 
-    // create a layer with the OSM source
-    var layer = new ol.layer.Tile({
-        source: new ol.source.Stamen({
-            layer: 'toner-lite'
-        })
-    });
-
     map = new ol.Map({
         interactions: ol.interaction.defaults().extend([dragAndDropInteraction]),
         target: 'mapcontainer',
@@ -249,9 +242,6 @@ function addingFeaturesToLayer() {
 
     var names = document.getElementById("value").value;
     var nameArray = names.split(", ");
-
-
-
 
         for (let name of nameArray) {
 

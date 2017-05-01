@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404, render, redirect
 from django.contrib.gis.shortcuts import render_to_kml
 from django.core.serializers import serialize
-from world.forms import CountryForm, UserMapForm, MapFormSet, CountryEditForm
+from world.forms import UserMapForm, MapFormSet, CountryListForm
 from .models import WorldBorder, CountryList, UserMap
 import json
 
@@ -41,23 +41,15 @@ def add_map(request):
 
 # adds a single layer
 def add_layer(request):
-    print(request.method)
     if request.method == 'POST':  # if the form has been filled
 
-        form = CountryForm(request.POST)
+        form = CountryListForm(request.POST)
 
         if form.is_valid():
-            name = request.POST.get('name', '')
-            countriesstring = request.POST.get('listofcountries', '')
-            countrylist = countriesstring.split(", ")
-            year = request.POST.get('year', '')
-            layercolour = request.POST.get('layercolour', '')
-            new_countrylist = CountryList(layername=name, countrylist=countrylist, year=year, layercolour=layercolour)
-            new_countrylist.save()
-
+            form.save()
             return redirect('/world')
     else:
-        form=CountryForm()
+        form=CountryListForm()
         return render(request, 'world/add_layer.html', {'form' :form})
 
 
@@ -89,14 +81,14 @@ def edit_map(request, map_name):
 
 def edit_layer(request,layer_name):
     user_layer = get_object_or_404(CountryList, layername=layer_name)
-    form = CountryEditForm(instance=user_layer)
+    form = CountryListForm(instance=user_layer)
     if request.method == "POST":
-        form = CountryEditForm(request.POST, instance=user_layer)
+        form = CountryListForm(request.POST, instance=user_layer)
         if form.is_valid():
             form.save()
             return redirect('world/show_layers')
     else:
-        form = CountryEditForm(instance=user_layer)
+        form = CountryListForm(instance=user_layer)
     return render(request, 'world/edit_layer.html', {'form' : form})
 
 def show_layers(request):
