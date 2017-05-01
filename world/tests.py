@@ -13,37 +13,51 @@ from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver.support.ui import Select
 
+# For tests to be run must create
+# superuser: admin password: testpassword
+# map: testMap
+# firefox installed
 
+
+# Tests on WorldBorder model
 class WorldBorderTests(TestCase):
 
+    # Function to create border entry
     def create_border(self, name="testBorder", area=1, pop2005="1",fips="a",iso2="a",iso3="a",un="1",region="1",subregion="1",lon="1",lat="1", objects="2"):
         return WorldBorder.objects.create(name=name,area=area,pop2005=pop2005,fips=fips,iso2=iso2,iso3=iso3,un=un,region=region,subregion=subregion,lon=lon,lat=lat)
 
+    # Tests border creation
     def test_border_creation(self):
         test = self.create_border()
         self.assertTrue(isinstance(test, WorldBorder))
         self.assertEqual(test.__str__(), test.name)
 
+    # Tests index view works - as data passed is WorldBorder
     def test_index_view(self):
         test = self.create_border()
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
+# Tests on UserMap model
 class UserMapsTests(TestCase):
 
+    # Function to create map entry
     def create_map(self, mapname="testMap"):
         return UserMap.objects.create(mapname=mapname)
 
+    # Tests map creation
     def test_map_creation(self):
         test= self.create_map()
         self.assertTrue(isinstance(test, UserMap))
         self.assertEqual(test.__str__(), test.mapname)
 
+    # Tests view that shows maps
     def test_show_maps_view(self):
         test = self.create_map()
         response = self.client.get(reverse('show_maps'))
         self.assertEqual(response.status_code, 200)
 
+    # Tests form to create map
     def test_add_map_form(self):
         test = UserMap.objects.create(mapname="maptest")
         data={'mapname' : test.mapname}
@@ -53,17 +67,20 @@ class UserMapsTests(TestCase):
         testform = UserMapForm()
         self.assertEqual(testform.is_valid(), False)
 
-
+# Tests on CountryList Model
 class CountryListTests(TestCase):
 
+    # Function to create CountryList entry
     def create_countrylist(self, layername="testlayer", year=1, layercolour="Blue"):
         return CountryList.objects.create(layername=layername,year=year,layercolour=layercolour)
 
+    #  Tests CountryList creation
     def test_countrylist_creation(self):
         test = self.create_countrylist()
         self.assertTrue(isinstance(test, CountryList))
         self.assertEqual(test.__str__(), test.layername)
 
+    # Tests form to create CountryList
     def test_add_layer_form(self):
         test = CountryList.objects.create(layername="testlayer", year=1)
         data= {'name' : test.layername,'listofcountries' : 'France', 'year' : test.year, 'layercolour' : 'Green'}
@@ -73,14 +90,17 @@ class CountryListTests(TestCase):
         testform = CountryForm()
         self.assertEqual(testform.is_valid(), False)
 
+    # Tests view that shows layers
     def test_show_layers_view(self):
         test = self.create_countrylist()
         response = self.client.get(reverse('show_layers'))
         self.assertEqual(response.status_code, 200)
 
-
+# Tests on webpages
+# Selenium test setUp and tearDown from https://realpython.com/blog/python/testing-in-django-part-1-best-practices-and-examples/
 class NavTestCase(LiveServerTestCase):
 
+    # Instantiates selenium firefox driver
     def setUp(self):
         self.selenium = webdriver.Firefox()
         super(NavTestCase, self).setUp()
@@ -89,6 +109,7 @@ class NavTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(NavTestCase, self).tearDown()
 
+    #  checks first select is populated with map names
     def test_select_populate(self):
         selenium = self.selenium
         selenium.get('http://localhost:8080/world/')
@@ -96,6 +117,7 @@ class NavTestCase(LiveServerTestCase):
         select = Select(selenium.find_element_by_id('map'))
         select.select_by_value("testMap")
 
+    # checks second select is populated after first is selected
     def test_second_select(self):
         selenium = self.selenium
         selenium.get('http://localhost:8080/world/')
@@ -105,6 +127,7 @@ class NavTestCase(LiveServerTestCase):
         time.sleep(2)
         select = Select(selenium.find_element_by_id('layer'))
 
+    # checks navigation to see layers
     def test_layer_nav(self):
         selenium = self.selenium
         selenium.get('http://localhost:8080/world/show_layers/')
@@ -113,6 +136,7 @@ class NavTestCase(LiveServerTestCase):
         time.sleep(1)
         selenium.find_element_by_id('id_countrylist')
 
+    # checks navigation to see maps
     def test_map_nav(self):
         selenium = self.selenium
         selenium.get('http://localhost:8080/world/show_maps/')
@@ -121,6 +145,7 @@ class NavTestCase(LiveServerTestCase):
         time.sleep(1)
         selenium.find_element_by_id('id_mapname')
 
+    # checks index navigation
     def test_index_nav(self):
         selenium = self.selenium
         selenium.get('http://localhost:8080/world/')
@@ -130,8 +155,10 @@ class NavTestCase(LiveServerTestCase):
 
         selenium.find_element_by_id('id_mapname')
 
-    # works as about:blank will not open unless there are features on the map
-    def test_adding_kml(self):
+    # Checks that, when a feature is added to the map, the exportjson button works
+    # Proving features can be added as well as the button functionality
+    # Works as about:blank will not open unless there are features on the map
+    def test_adding_geojson(self):
         selenium = self.selenium
         selenium.get('http://localhost:8080/world/')
         time.sleep(2)
@@ -145,6 +172,7 @@ class NavTestCase(LiveServerTestCase):
         time.sleep(1)
         selenium.get('about:blank')
 
+    # As per the last function, checks removal of features from the map
     # works as the alert only pops up if there are no map layers
     def test_removing(self):
         selenium = self.selenium
@@ -166,13 +194,13 @@ class NavTestCase(LiveServerTestCase):
         alert.accept()
 
 
-
+# Tests on Admin site
 class AdminTestCase(LiveServerTestCase):
 
     def setUp(self):
         User.objects.create_superuser(
             username='admin',
-            password='admin',
+            password='testpassword',
             email='admin@example.com'
         )
 
@@ -183,6 +211,7 @@ class AdminTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(AdminTestCase, self).tearDown()
 
+    # Checks new users can be added in admin site, also checking admin log on
     def test_register(self):
         selenium = self.selenium
         #Opening the link we want to test

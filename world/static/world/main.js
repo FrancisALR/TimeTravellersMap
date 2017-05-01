@@ -1,6 +1,7 @@
 var jsList = "{{names|escapejs}}";
 
 var stamen;
+
 // Solution to add WorldBorder entries to map with kml taken from following source
 // Title: How to display my PostGis geometry on the GeoDjango map widget
 // Author: User dmh126 at gis.stackexchange
@@ -18,9 +19,6 @@ var generalLayer = new ol.layer.Vector({
 })
 
 function init() {
-  var starttime = new Date().getTime();
-
-  console.log('initialized')
 
   // Solution to overlay external data to the map taken from OpenLayers.org official examples
   // Title: DragAndDrop
@@ -28,6 +26,7 @@ function init() {
   // Available at: https://openlayers.org/en/latest/examples/drag-and-drop.html
   var dragAndDropInteraction = new ol.interaction.DragAndDrop({
         formatConstructors: [
+          // Different accepted formats
           ol.format.GPX,
           ol.format.GeoJSON,
           ol.format.IGC,
@@ -37,6 +36,7 @@ function init() {
         ]
       });
 
+    // Creation of map
     map = new ol.Map({
         interactions: ol.interaction.defaults().extend([dragAndDropInteraction]),
         target: 'mapcontainer',
@@ -48,6 +48,7 @@ function init() {
         })
     });
 
+    // Map base layer
     stamen = new ol.layer.Tile({
         source: new ol.source.Stamen({
             layer: 'toner-lite'
@@ -56,9 +57,10 @@ function init() {
 
     map.addLayer(stamen);
 
+    // Source containing all WorldBorder entries
     var sourceF = new ol.source.Vector({
         projection: new ol.proj.get("EPSG:3857"),
-        url: 'http://localhost:8080/world/all_countries',
+        url: 'http://localhost:8080/world/all_countries', // url to access all entries in kml format
         format: new ol.format.KML({
             extractStyles: false
         })
@@ -66,10 +68,12 @@ function init() {
     })
     map.addLayer(generalLayer)
 
+    // Makes sure source is actually loaded but layer is invisible
     generalLayer.getSource().on('change', function(evt) {
         generalLayer.setVisible(false)
     })
 
+    // Instantiates drag and drop function
     dragAndDropInteraction.on('addfeatures', function(event) {
             var vectorSource = new ol.source.Vector({
               features: event.features
@@ -78,7 +82,6 @@ function init() {
               source: vectorSource,
               visibility: true,
             }));
-            //map.getView().fit(vectorSource.getExtent());
           });
 
           var displayFeatureInfo = function(pixel) {
@@ -92,7 +95,7 @@ function init() {
               for (i = 0, ii = features.length; i < ii; ++i) {
                 info.push(features[i].get('name'));
               }
-              document.getElementById('info').innerHTML = info.join(', ') || '&nbsp';
+              document.getElementById('info').innerHTML = info.join(', ') || '&nbsp'; //displays country names on hover
             } else {
               document.getElementById('info').innerHTML = '&nbsp;';
             }
@@ -121,39 +124,36 @@ function init() {
           map.addInteraction(select);
 
               window.app = {};
+
       var app = window.app;
-      var endtime = new Date().getTime();
-      var totaltime = endtime - starttime
-      console.log(totaltime)
-      return totaltime
 
 }
 
+// Function that adds user map specific layers
 function addingSavedMapFeaturesToLayer() {
 
-    var names = document.getElementById('layer');
-    var userColour = names.options[names.selectedIndex].value;
-    var text = names.options[names.selectedIndex].text;
+    var names = document.getElementById('layer'); // gets id of select object
+    var userColour = names.options[names.selectedIndex].value; // strips colour of layer
+    var text = names.options[names.selectedIndex].text; // strips country list as a string
     var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
-    var nameArray = string.split(", ");
-    //console.log(nameArray)
+    var nameArray = string.split(", "); // creates array of country names
 
     for (let name of nameArray) {
 
         var trimmedname = name.replace(/^"+|"+$/g, '');
-        var fullytrimmed = trimmedname.trim();
+        var fullytrimmed = trimmedname.trim(); // final processing to get just country names
 
 
         var featureList = new Array;
 
-        var specificSource = new ol.source.Vector({})
+        var specificSource = new ol.source.Vector({}) // new source for features to be added
 
+        // accesses all features from the general layer containing all border data
         features = generalLayer.getSource().getFeatures();
         for (var i = 0; i < features.length; i++) {
-            if (features[i].getProperties().name == trimmedname) {
+            if (features[i].getProperties().name == trimmedname) { // checks the name corresponds to an entry
                 featureList.push(features[i])
                 specificSource.addFeature(features[i])
-                //console.log(features[i])
                 map.removeLayer(generalLayer)
                 break;
             }
@@ -169,7 +169,7 @@ function addingSavedMapFeaturesToLayer() {
                         width: 1
                     }),
                     fill: new ol.style.Fill({
-                        color: userColour
+                        color: userColour // user defined colour
                     })
                 })
             ]
@@ -177,11 +177,13 @@ function addingSavedMapFeaturesToLayer() {
 
         map.addLayer(specificLayer);
         specificLayer.setOpacity(0.5);
+        document.getElementById('exportjson').disabled = false; // allows the user to export features
 
     }
 
 }
 
+// adds standalone layers to the map, same general working as previous function
 function addingSavedFeaturesToLayer() {
 
     var names = document.getElementById('dropdown');
@@ -189,7 +191,6 @@ function addingSavedFeaturesToLayer() {
     var userColour = names.options[names.selectedIndex].value;
     var string = text.substring(text.lastIndexOf("[") + 2, text.lastIndexOf("]") - 1);
     var nameArray = string.split(", ");
-    //console.log(nameArray);
     if (text != "Select a Layer") {
 
     for (let name of nameArray) {
@@ -206,15 +207,10 @@ function addingSavedFeaturesToLayer() {
                 featureList.push(features[i])
                 specificSource.addFeature(features[i])
 
-                //console.log(features[i])
                 map.removeLayer(generalLayer)
-                //console.log(featureList)
             }
 
         }
-
-
-
 
         var specificLayer = new ol.layer.Vector({
             source: specificSource,
@@ -238,6 +234,7 @@ function addingSavedFeaturesToLayer() {
   }
 }
 
+// takes list of countries as input and adds to the map with preset styling
 function addingFeaturesToLayer() {
 
     var names = document.getElementById("value").value;
@@ -255,9 +252,7 @@ function addingFeaturesToLayer() {
                     featureList.push(features[i].getProperties().name)
 
                     specificSource.addFeature(features[i])
-                    //console.log(features[i])
                     map.removeLayer(generalLayer)
-                    //console.log(featureList)
                     break;
                 }
 
@@ -280,7 +275,6 @@ function addingFeaturesToLayer() {
                     })
                 ]
             })
-            //console.log(specificSource.getFeatures())
 
             if (1 == featureList.length) {
             map.addLayer(specificLayer)
@@ -303,10 +297,11 @@ $(document).ready(
                 $("select#layer").html("<option>Select a layer</option>");
                 $("select#layer").attr('disabled', true);
             } else {
-                var url = "map/" + $(this).val() + "/all_json_models";
+                var url = "map/" + $(this).val() + "/all_json_models"; // accesses the map data in json format
                 var map = $(this).val();
                 $.getJSON(url, function(layers) {
                     var options = '<option value="Z">Select a layer</option>';
+                    // adds options to second select for each layer of the selected map
                     for (var i = 0; i < layers.length; i++) {
                         options += '<option value="' + layers[i].fields['layercolour'] + '" id=' + layers[i].fields['layername'] + '>' + layers[i].fields['countrylist'] + " : " + layers[i].fields['year'] + '</option>';
                     }
@@ -329,12 +324,9 @@ $(document).ready(
       // console.log('here')
       $.getJSON(url, function(layers) {
         for (var i = 0; i < layers.length; i++) {
-
           if (selectedLayer == layers[i].fields['layername']) {
-            $("#infofield").val(layers[i].fields['info']);
+            $("#infofield").val(layers[i].fields['info']); // adds info and year data to form fields
             $("#yearfield").val(layers[i].fields['year']);
-            console.log(selectedLayer)
-            console.log(layers[i].fields['layername'])
         }
       }
 
@@ -342,22 +334,22 @@ $(document).ready(
 
 $(document).ready(function() {
 $( "#clearform" ).click(function() {
-  document.getElementById("mapsform").reset();
+  document.getElementById("mapsform").reset(); // resets form entries
   $('select#layer option').prop('selectedIndex', 0)
   for (layer in map.getLayers()) {
     if (map.getLayers().getArray().length > 1) {
-      map.getLayers().removeAt(1);
+      map.getLayers().removeAt(1); // removes all layers except that at index 0, the stamen layer
 
   }
 }
 })});
 
+// clearing for use in export function
 function clearMapOnly() {
   for (layer in map.getLayers()) {
     if (map.getLayers().getArray().length > 1) {
       map.getLayers().removeAt(1);
     }}
-    console.log('here')
     document.getElementById("mapsform").reset();
     map.addLayer(stamen)
 }
@@ -373,7 +365,7 @@ $(function(){
       selectedElement.removeAttr('selected');
       selectedElement.next().attr('selected', 'selected');
       $('select#layer').val(selectedElement.next().val());
-      $("select#layer").trigger('change');
+      $("select#layer").trigger('change'); // triggers the adding of layers to the map
 
 }
 
@@ -381,18 +373,17 @@ $(function(){
   });
 });
 
+// Function to get GeoJSON data from the layers currently on the map
 function getJsonfromCurrentMap() {
   if (map.getLayers().getArray().length >0) {
     specificLayer = map.getLayers().getArray();
-    specificLayer.splice(0, 1);
-    if (specificLayer[0] == null) {
+    specificLayer.splice(0, 1); // takes layers except for base layer
+    if (specificLayer[0] == null) { // checks there are layers on the map
       map.addLayer(stamen)
-      window.alert("No layers added")
     }
     else {
-      var specificSource = new ol.source.Vector({})
-      var containsArray = new Array;
-      var addArray = new Array;
+      var specificSource = new ol.source.Vector({}) // new source for adding features to
+      var containsArray = new Array; // Array to hold what is being exported
       for (var i = 0; i < map.getLayers().getArray().length; i++) {
           features = specificLayer[i].getSource().getFeatures();
           for (let feature of features) {
@@ -402,6 +393,7 @@ function getJsonfromCurrentMap() {
             break;
           }
           else {
+            // must check if features are already in as cannot export duplicate features
           if (containsArray.indexOf(features[0].getProperties().name) === -1) {
             containsArray.push(features[0].getProperties().name)
             specificSource.addFeatures(features);
@@ -410,6 +402,7 @@ function getJsonfromCurrentMap() {
 
       }
 
+      // New format for export
       var geoJSONExport = new ol.format.GeoJSON({
         'extractStyles':true,
         'defaultdataprojection': 'EPSG:3857',
@@ -417,9 +410,11 @@ function getJsonfromCurrentMap() {
 
       })
 
+      // Writes features and posts to a new browser window
       var geojsonoutput = geoJSONExport.writeFeatures(specificSource.getFeatures());
       var wnd = window.open("", "_blank");
       wnd.document.write(geojsonoutput);
+      // clears map and instigates this function again so base layer is readded
       clearMapOnly()
       document.getElementById('exportjson').click()
     }

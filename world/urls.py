@@ -3,6 +3,7 @@ from .models import WorldBorder
 from django.contrib.gis import admin
 from . import views
 
+# URLS for each view
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^admin/', admin.site.urls),

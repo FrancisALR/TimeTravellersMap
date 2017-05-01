@@ -2,6 +2,10 @@ import os
 from django.contrib.gis.utils import LayerMapping
 from .models import WorldBorder
 
+# Function to import all WorldBorders from shapefile to database
+# python manage.py shell
+# from world import load
+# load.run()
 world_mapping = {
     'fips' : 'FIPS',
     'iso2' : 'ISO2',

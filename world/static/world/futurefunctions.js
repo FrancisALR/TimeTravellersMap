@@ -1,3 +1,5 @@
+// Functions that need further work purporting to moving backwards 
+
 $(function(){
   $('#fieldPrevious').on('click', function(){
       if ($('select#layer').find(":selected").index() != 0) {

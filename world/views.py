@@ -27,7 +27,7 @@ def all_json_models (request, map):
 def add_map(request):
     if request.POST:
         form = UserMapForm(request.POST)
-        if form.is_valid():
+        if form.is_valid(): # checks form validity
             usermap = form.save(commit=False)
             map_formset = MapFormSet(request.POST, instance=usermap, prefix="nested")
             if map_formset.is_valid():
@@ -52,16 +52,16 @@ def add_layer(request):
         form=CountryListForm()
         return render(request, 'world/add_layer.html', {'form' :form})
 
-
+# view to display all maps then for editing/deleting
 def show_maps(request):
     all_layers = CountryList.objects.all()
     all_maps = UserMap.objects.all()
     ordered_maps = all_maps.order_by('mapname')
     return render(request, 'world/show_maps.html', { "user_layers": all_layers, "user_maps" : ordered_maps})
 
+# allows for editing of map data
 def edit_map(request, map_name):
-
-    user_map = get_object_or_404(UserMap, mapname=map_name)
+    user_map = get_object_or_404(UserMap, mapname=map_name) # gets map data from parameter
     form = UserMapForm(instance=user_map)
     formset = MapFormSet(instance=user_map,  prefix="nested")
 
@@ -79,9 +79,10 @@ def edit_map(request, map_name):
         formset = MapFormSet(instance=user_map,  prefix="nested")
     return render(request, 'world/edit_map.html', {'form' : form, "map_formset": formset})
 
+# allows for editing a layers
 def edit_layer(request,layer_name):
     user_layer = get_object_or_404(CountryList, layername=layer_name)
-    form = CountryListForm(instance=user_layer)
+    form = CountryListForm(instance=user_layer) # populates form with appropriate data
     if request.method == "POST":
         form = CountryListForm(request.POST, instance=user_layer)
         if form.is_valid():
@@ -91,15 +92,18 @@ def edit_layer(request,layer_name):
         form = CountryListForm(instance=user_layer)
     return render(request, 'world/edit_layer.html', {'form' : form})
 
+# displays layers for editing and deleting
 def show_layers(request):
     all_layers = CountryList.objects.all()
     return render(request, 'world/show_layers.html', { "user_layers": all_layers})
 
+# function that takes a map_name as parameter and deletes it
 def delete_map(request, map_name):
     to_delete = get_object_or_404(UserMap, mapname=map_name)
     to_delete.delete()
     return redirect('/world')
 
+# function that takes a layer_name as parameter and deletes it
 def delete_layer(request, layer_name):
     to_delete = get_object_or_404(CountryList, layername=layer_name)
     to_delete.delete()

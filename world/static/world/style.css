@@ -1,102 +1,100 @@
 div.tablecontainer {
-  margin: auto;
-  margin-top: 10px;
-  padding: 5px;
-  /*border: 1px solid gray;*/
-  width: 70%;
-  position: relative;
-  height: 100%;
+    margin: auto;
+    margin-top: 10px;
+    padding: 5px;
+    /*border: 1px solid gray;*/
+    width: 70%;
+    position: relative;
+    height: 100%;
 }
+
 div.container {
-  margin-top: 10px;
-  padding-top: 5px;
-  width: 90%;
-  /*border: 1px solid gray;*/
-
-
+    margin-top: 10px;
+    padding-top: 5px;
+    width: 90%;
+    /*border: 1px solid gray;*/
 }
 
 input.submit-button {
-  margin-top: 5px;
-  margin-bottom: 50px;
-
+    margin-top: 5px;
+    margin-bottom: 50px;
 }
 
 #formset {
-  width: 70%;
-  margin:auto;
+    width: 70%;
+    margin: auto;
 }
 
-
 #mapname_table {
-  background-color: #efefef;
+    background-color: #efefef;
 }
 
 table {
-  border-collapse: collapse;
-  width: 100%;
-  table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
 }
+
 input {
-  box-shadow: 1px 1px 4px #EBEBEB;
-  -moz-box-shadow: 1px 1px 4px #EBEBEB;
-  -webkit-box-shadow: 1px 1px 4px #EBEBEB;
+    box-shadow: 1px 1px 4px #EBEBEB;
+    -moz-box-shadow: 1px 1px 4px #EBEBEB;
+    -webkit-box-shadow: 1px 1px 4px #EBEBEB;
 }
 
 th, td {
-  text-align: left;
-  padding: 8px;
-  font-weight: normal;
+    text-align: left;
+    padding: 8px;
+    font-weight: normal;
 }
 
 th {
-  /*background-color: #333;*/
-  color: black;
-  font-weight: normal;
-  width: 150px;
+    /*background-color: #333;*/
+    color: black;
+    font-weight: normal;
+    width: 150px;
 }
 
 ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
 }
 
 li {
-  float: left;
+    float: left;
 }
 
 li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
 
 li a:hover {
-  background-color: #333;
+    background-color: #333;
 }
 
 footer {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding-top: 15px;
-  height: 50px;
-  background-color: #efefef;
-  text-align: center;
-  display: block;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding-top: 15px;
+    height: 50px;
+    background-color: #efefef;
+    text-align: center;
+    display: block;
 }
 
 .selectstyling {
-  border: 1px solid #ccc;
-  width: 120px;
-  border-radius: 3px;
-  overflow: hidden;
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
 }
 
 .selectstyling select {
@@ -106,88 +104,89 @@ footer {
 }
 
 header {
-  padding: 1em;
-  color: white;
-  background-color: black;
-  clear: left;
-  text-align: center;
+    padding: 1em;
+    color: white;
+    background-color: black;
+    clear: left;
+    text-align: center;
 }
 
 .my-select {
-  visibility: hidden;
-  float: none;
+    visibility: hidden;
+    float: none;
 }
 
 html, body {
-  font-family: Helvetica;
-  height: 100%;
+    font-family: Helvetica;
+    height: 100%;
 }
 
 #map, #dropdown {
-  width: 200px;
-  height: auto;
+    width: 200px;
+    height: auto;
 }
 
 #left {
-  float: left;
-  max-width: 100px;
-  margin: 0;
-  padding: 1em;
+    float: left;
+    max-width: 100px;
+    margin: 0;
+    padding: 1em;
 }
 
 #mapcontainer {
-  height: 800px;
-  margin-left: 250px;
-  /*border: 1px solid gray;*/
-  padding: 1em;
+    height: 800px;
+    margin-left: 250px;
+    /*border: 1px solid gray;*/
+    padding: 1em;
 }
 
 .clear {
-  clear: both;
+    clear: both;
 }
 
 #infofield {
-  height: 150px;
-  width: 200px;
-  padding: 0;
-  border: 1px solid;
-  border-color: rgba(0, 0, 0, .15);
+    height: 150px;
+    width: 200px;
+    padding: 0;
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, .15);
 }
 
 #yearfield {
-  width: 200px;
-  padding: 0;
-  border: 1px solid;
-  border-color: rgba(0, 0, 0, .15);
-  margin-bottom: 10px;
+    width: 200px;
+    padding: 0;
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, .15);
+    margin-bottom: 10px;
 }
 
 #info {
-  margin-top: 10px;
-  margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 input.kmlbutton {
-  margin-top: 5px;
+    margin-top: 5px;
 }
 
 #fullform {}
 
 #mapsform {
-  padding-top: 50px;
+    padding-top: 50px;
 }
 
 button.navbutton {
-display: inline-block;
+    display: inline-block;
 }
+
 #fieldNext {
-margin-top: 5px;
-margin-bottom: 20px;
-display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    display: inline-block;
 }
 
 .form-style {
-  padding: 10px 20px;
+    padding: 10px 20px;
     background: #D3D3D3;
     margin: 10px auto;
     padding: 20px;
@@ -196,25 +195,25 @@ display: inline-block;
 }
 
 .form-style input {
-  background: #D3D3D3;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  outline: 0;
-  padding: 7px;
-  width: 100%;
-  background-color: #D3D3D3;
-  color: #8a97a0;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
-  margin-bottom: 30px;
+    background: #D3D3D3;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: 0;
+    padding: 7px;
+    width: 100%;
+    background-color: #D3D3D3;
+    color: #8a97a0;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
+    margin-bottom: 30px;
 }
 
 .form-style th {
-  width: 200px;
-  colour:#8a97a0;
+    width: 200px;
+    colour: #8a97a0;
 }
 
-#maptable th{
+#maptable th {
     background: #D3D3D3;
     margin: 10px auto;
     background: #333;
@@ -222,5 +221,5 @@ display: inline-block;
 }
 
 textarea {
-  background: #D3D3D3;
+    background: #D3D3D3;
 }

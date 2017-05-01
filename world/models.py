@@ -24,12 +24,15 @@ class WorldBorder(models.Model):
     def __str__(self):              # __unicode__ on Python 2
         return self.name
 
+# Model defining UserMaps
 class UserMap(models.Model):
     mapname = models.CharField(max_length=50)
 
+    # Returns the string representation of the model.
     def __str__(self):              # __unicode__ on Python 2
         return self.mapname
 
+# Model defining CountryLists or layers
 class CountryList(models.Model):
     layername = models.CharField(max_length=50)
     countrylist = ArrayField(models.CharField(max_length=50),null=True, blank=True)
@@ -38,5 +41,6 @@ class CountryList(models.Model):
     layercolour = models.CharField(max_length=50)
     relatedmap = models.ForeignKey(UserMap, null=True, blank=True, related_name="layers")
 
+    # Returns the string representation of the model.
     def __str__(self):              # __unicode__ on Python 2
         return self.layername
